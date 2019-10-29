@@ -1,7 +1,15 @@
 ---
-title: "yay !"
+title: "Aaphsaarah Rahman"
 ---
 
+
+
+```{r, out.width = '30%', fig.align="center", echo = FALSE}
+library(knitr)
+include_graphics("ap.jpg")
+```
 ### I AAPHSAARAH have a webpage!
 
 And I can put all kinds of stuff on it!
+
+My cv here [here](Aaphsaarah_cv.pdf)
