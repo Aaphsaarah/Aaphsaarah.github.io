@@ -5,10 +5,12 @@ navbar:
   right:
     - text: "About"
       href: about.html
+    - text: "Blog"
+      href: blog.html
     - icon: fa-envelope fa-lg
       href: mailto:<apsarah.rahman@gmail.com>
     - icon: fa-github fa-lg
-      href: https://github.com/Aaphsaarah/Aaphsaarah.github.io
+      href: https://github.com/Aaphsaarah
     - icon: fa-twitter fa-lg
       href: https://twitter.com/aaphsaarah
     - icon: fa-linkedin fa-lg

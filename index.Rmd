@@ -8,8 +8,5 @@ title: "Aaphsaarah Rahman"
 library(knitr)
 include_graphics("ap.jpg")
 ```
-### I AAPHSAARAH have a webpage!
 
-And I can put all kinds of stuff on it!
-
-My cv here [here](Aaphsaarah_cv.pdf)
+AAPHSAARAH YOU have a webpage!
