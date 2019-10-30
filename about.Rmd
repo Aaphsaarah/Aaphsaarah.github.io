@@ -1,0 +1,29 @@
+---
+title: "About"
+---
+
+### About Author
+
+```{r, out.width = '30%', fig.align="center", echo = FALSE}
+library(knitr)
+include_graphics("ap.jpg")
+```
+
+Hey!
+
+I'm Aaphsaarah Rahman. A little background about myself. I'm a graduate student at Weill Cornell Medicine. Aquiring my Masters in Biostatistics and Data Science. Did my undergrade in North South University, Bangladesh. Coding is fun, easy and adventurous once you get the gist of it. I love sharing open source codes and giving advice. Hope you enjoy and find this helpful too.
+If you like to know more about me. Then [here](Aaphsaarah_r.pdf) is my resume. 
+
+
+This blog is about sharing something interesting insights which I explored while doing a project. Hope this helps you too as well. 
+
+Its focused to the audiences with little coding background. 
+
+
+My resume here [here](Aaphsaarah_r.pdf)
+
+
+
+Sometimes you need to say a bit about the site -- how it was made, where it's hosted, where the source code can be found. 
+
+If this is for a project or analysis, I recommend giving some details about the R package versions that you used to create the content.
