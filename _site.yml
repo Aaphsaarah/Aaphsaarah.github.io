@@ -1,10 +1,8 @@
 name: "Aaphsaarah Rahman!"
 output_dir: "."
 navbar:
-  title: "Home"
+  title: "Author"
   right:
-    - text: "About"
-      href: about.html
     - text: "Blog"
       href: blog.html
     - icon: fa-envelope fa-lg
