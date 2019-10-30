@@ -331,7 +331,7 @@ library(waffle)
 library(hrbrthemes)
 library(dplyr)</code></pre>
 <div id="simpliest-waffle-plot" class="section level1">
-<h1>Simpliest waffle Plot</h1>
+<h1>Simplest waffle Plot</h1>
 <p>This is a simplest usage of a waffle plot. Pluging five values(20,40,10,5,25), with five rows and giving a title “Basic waffle chart”.</p>
 <pre class="r"><code>waffle(c(20,40,10,5,25), rows = 5, title = &quot;Basic waffle chart&quot;, xlab = &quot;1 box equals 1 unit&quot;)</code></pre>
 <p><img src="blog_files/figure-html/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;" /></p>
@@ -361,7 +361,7 @@ fruit_df</code></pre>
 </div>
 <div id="simple-waffle-plot" class="section level1">
 <h1>Simple waffle plot</h1>
-<p>This is plain waffle. Its uses the syntax geom_waffle(). It worls similar to waffle(). Flip parameter makes the plot in horizontal position otherwise it would be vertical, n_rows sets the no. of row for the base of plot and size is its size of box.</p>
+<p>This is plain waffle. It uses the syntax geom_waffle(). It worls similar to waffle(). Flip parameter makes the plot in horizontal position otherwise it would be vertical, n_rows sets the no. of row for the base of plot and size is its size of box.</p>
 <pre class="r"><code>fruit_data +
   geom_waffle(
     n_rows = 15, size = 0.33, colour = &quot;white&quot;, flip = TRUE
@@ -389,7 +389,7 @@ fruit_df</code></pre>
 </div>
 <div id="make-waffle-box-into-circles" class="section level1">
 <h1>Make waffle box into circles</h1>
-<p>Let us mix things up we can also round out the corners by specifying a grid::unit() value to the radius parameter.It brings variety to the graph. This isn’t generally recommended as the goal is to enable quick mental perception for parts to the whole and the rounded corners can delay and/or skew said interpretation.</p>
+<p>Let us mix things up we can round out the corners by specifying a grid::unit() value to the radius parameter.It brings variety to the graph. This isn’t generally recommended as the goal is to enable quick mental perception for parts to the whole and the rounded corners can delay and/or skew said interpretation.</p>
 <pre class="r"><code>fruit_data +
   geom_waffle(
     n_rows = 15, size = 0.5, colour = &quot;white&quot;, flip = TRUE, radius = unit(9, &quot;pt&quot;)
@@ -409,7 +409,7 @@ fruit_df</code></pre>
     values = c(&quot;black&quot;, &quot;white&quot;, &quot;black&quot;, &quot;white&quot;)
   )</code></pre>
 <p><img src="blog_files/figure-html/unnamed-chunk-10-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>There is another Waffle plots which includes icons inside, Github page argues that the argument use_glyph can be used to replace the tiles by pictures from the extrafont package, however, I could not get the code to work.</p>
+<p>There is another Waffle plot which includes icons inside, Github page argues that the argument use_glyph can be used to replace the tiles by pictures from the extrafont package, however, I could not get the code to work.</p>
 <p>Waffle plot is easy to understand and not monotonous like histogram. Its easy to grab the information from the graph. Its even readable for people who is not from a technical background.</p>
 </div>
 
