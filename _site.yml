@@ -1,7 +1,7 @@
 name: "Aaphsaarah Rahman!"
 output_dir: "."
 navbar:
-  title: "Author"
+  title: "About Me"
   right:
     - text: "Blog"
       href: blog.html
