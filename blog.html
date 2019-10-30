@@ -390,7 +390,7 @@ fruit_df</code></pre>
 </div>
 <div id="make-waffle-box-into-circles" class="section level1">
 <h1>Make waffle box into circles</h1>
-<p>Let us mix things up we can round out the corners by specifying a grid::unit() value to the radius parameter.It brings variety to the graph. This isn’t generally recommended as the goal is to enable quick mental perception for parts to the whole and the rounded corners can delay and/or skew said interpretation.</p>
+<p>Let us mix things up we can round out the corners by specifying a grid::unit() value to the radius parameter. It brings variety to the graph. This isn’t generally recommended as the goal is to enable quick mental perception for parts to the whole and the rounded corners can delay and/or skew said interpretation.</p>
 <pre class="r"><code>fruit_data +
   geom_waffle(
     n_rows = 15, size = 0.5, colour = &quot;white&quot;, flip = TRUE, radius = unit(9, &quot;pt&quot;)
