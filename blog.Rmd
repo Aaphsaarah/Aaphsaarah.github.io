@@ -1,5 +1,5 @@
 ---
-title: 'Mirror mirror on Google Chome who has the awesome plot in the world - Its
+title: 'Mirror mirror on the wall who has the awesome plot in the world - Its
   Waffle Plot! '
 ---
 
@@ -11,11 +11,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-
-
+    
+    
+   
 
 Is it really important to make the plots look good, readable for clients?
+
 Yes! It’s very important.
 
 We often see a histogram or bar chart in the data visualisation section to interpret data. Which is pretty monotonous. So I got around these amazing Waffle plot.
@@ -29,6 +30,7 @@ And few basic library as "ggplot2", "dplyr", "tidyverse" needs to be loaded as w
  install.packages(c("waffle", "extrafont", "Hrbrthemes"))
 ```
 
+
 Load all the packages, to set the working environment.
 ```{r}
 library(tidyverse)
@@ -38,6 +40,9 @@ library(waffle)
 library(hrbrthemes)
 library(dplyr)
 ```
+ 
+  
+  
 
 # Simpliest waffle Plot  
 
@@ -49,7 +54,9 @@ waffle(c(20,40,10,5,25), rows = 5, title = "Basic waffle chart", xlab = "1 box e
 
 ```
 
-# Data Frame   
+  
+# Data Frame     
+
 Lets make a data frame as an example to work with.  There are four fruits with assigned values and colour.
 
 ```{r}
@@ -73,6 +80,9 @@ fruit_data<- fruit_df %>%
   theme_enhance_waffle() #  it enhance the plot, omits axis elements from the plot
   
 ```
+   
+      
+   
 
 # Simple waffle plot   
 
@@ -83,7 +93,8 @@ fruit_data +
     n_rows = 15, size = 0.33, colour = "white", flip = TRUE
   )
 ```
-
+   
+     
 # Proportional waffle plot 
 Waffles work best when they are square (makes it easier to compare parts to whole which is the purpose of the chart). Length of x-axis is equal to y-axis. We could do this normalization prior to passing data into geom_waffle() or let it do it for us with the make_proportional parameter.
 ```{r, fig.align= "center", fig.width= 5, fig.height= 3}
@@ -93,7 +104,8 @@ fruit_data  +
     make_proportional = TRUE
   )
 ```
-
+  
+    
 # Adding border colour   
 
 The border of tiles can be colored according to your background using the colour parameter.
@@ -103,7 +115,8 @@ fruit_data +
     n_rows = 10, size = 3, colour = "white", make_proportional = TRUE
   )
 ```
-
+  
+    
 # Make waffle box into circles
 
 Let us mix things up we can also round out the corners by specifying a grid::unit() value to the radius parameter.It brings variety to the graph. This isn’t generally recommended as the goal is to enable quick mental perception for parts to the whole and the rounded corners can delay and/or skew said interpretation.
@@ -113,7 +126,8 @@ fruit_data +
     n_rows = 15, size = 0.5, colour = "white", flip = TRUE, radius = unit(9, "pt")
   )
 ```
-
+   
+      
 # Highlighting effect  
 
 Here is how we can add a highlighting effect using scale_colour_manual. This is quite handy in persentation / visualisation to point out an important indicator.
@@ -128,6 +142,7 @@ fruit_data+
     values = c("black", "white", "black", "white")
   )
 ```
+
 
 There is another Waffle plots which includes icons inside, Github page argues that the argument use_glyph can be used to replace the tiles by pictures from the extrafont package, however, I could not get the code to work. 
 
