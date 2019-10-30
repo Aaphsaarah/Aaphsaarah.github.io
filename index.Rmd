@@ -1,0 +1,22 @@
+---
+title: "Aaphsaarah Rahman, Ms"
+
+---
+
+
+
+```{r, out.width = '30%', fig.align="center", echo = FALSE}
+ 
+library(knitr)
+include_graphics("me.jpg")
+```
+
+
+Hey!
+
+I'm Aaphsaarah Rahman. A little background about myself. I'm a graduate student at Weill Cornell Medicine. Acquiring my Masters in Biostatistics and Data Science. I did my undergrad in Electrical and Electrical Engineering at North South University, Bangladesh. I have published and presented a paper titled “A Novel Braille Pad with Dual Text-to-Braille and Braille-to-Text capabilities with an integrated LCD Display” in the 2017 International Conference on Intelligent Computing, Instrumentation and Control Technologies (ICICICT), Kerala, India, held on 6th -7th July 2017. During this capstone project, I made a Braille Pad through which I found my love for programming. And after doing my internship at GrameenPhone Ltd. with Data Analyst and Research team I was adamant to pursue my career in Data Science.
+
+Coding is fun, easy and adventurous once you get the gist of it. I love sharing open-source codes and sharing advice. This blog is about sharing something interesting insights which I explored while doing a project. 
+
+If you like to know more about me. Then [here](Aaphsaarah_r.pdf) is my resume. 
+
