@@ -19,8 +19,13 @@ Is it really important to make the plots look good, readable for clients?
 
 Yes! It’s very important.
 
-We often see a histogram or bar chart in the data visualisation section to interpret data. Which is pretty monotonous. So I got around these amazing Waffle plot.
+We often see a histogram or bar chart in the data visualisation section to interpret data, which is pretty monotonous. So I got around these amazing Waffle plot. Waffle plot looks like waffle hence the name.
 
+```{r, out.width = '30%', fig.align="center", echo = FALSE}
+ 
+library(knitr)
+include_graphics("waffle.jpg")
+```
 To get started we need to install these packages.   
 Waffle and Hrbrthemes package includes the icon as a square box, which can be customized according to our means. Hrbrthemes can be installed from Github.
 Extrafont package makes it easier to use fonts other than the basic PostScript fonts that R uses. Fonts that are imported into extrafont can be used with PDF or PostScript output files. 
@@ -44,7 +49,7 @@ library(dplyr)
   
   
 
-# Simpliest waffle Plot  
+# Simplest waffle Plot  
 
 This is a simplest usage of a waffle plot.
 Pluging five values(20,40,10,5,25), with five rows and giving a title 
@@ -55,7 +60,7 @@ waffle(c(20,40,10,5,25), rows = 5, title = "Basic waffle chart", xlab = "1 box e
 ```
 
   
-# Data Frame     
+# Data frame     
 
 Lets make a data frame as an example to work with.  There are four fruits with assigned values and colour.
 
@@ -86,7 +91,7 @@ fruit_data<- fruit_df %>%
 
 # Simple waffle plot   
 
-This is plain waffle. Its uses the syntax geom_waffle(). It worls similar to waffle(). Flip parameter makes the plot in horizontal position otherwise it would be vertical, n_rows sets the no. of row for the base of plot and size is its size of box.
+This is plain waffle. It uses the syntax geom_waffle(). It worls similar to waffle() function. Flip parameter makes the plot in horizontal position otherwise it would be vertical, n_rows sets the no. of row for the base of plot and size is its size of box.
 ```{r, fig.align= "center", fig.width= 5, fig.height= 3}
 fruit_data +
   geom_waffle(
@@ -96,6 +101,7 @@ fruit_data +
    
      
 # Proportional waffle plot 
+
 Waffles work best when they are square (makes it easier to compare parts to whole which is the purpose of the chart). Length of x-axis is equal to y-axis. We could do this normalization prior to passing data into geom_waffle() or let it do it for us with the make_proportional parameter.
 ```{r, fig.align= "center", fig.width= 5, fig.height= 3}
 fruit_data  +
@@ -144,7 +150,7 @@ fruit_data+
 ```
 
 
-There is another Waffle plots which includes icons inside, Github page argues that the argument use_glyph can be used to replace the tiles by pictures from the extrafont package, however, I could not get the code to work. 
+There is another Waffle plot which includes icons inside, Github page argues that the argument use_glyph can be used to replace the tiles by pictures from the extrafont package. However, I could not get the code to work. 
 
 Waffle plot is easy to understand and not monotonous like histogram. Its easy to grab the information from the graph. Its even readable for people who is not from a technical background.
 
