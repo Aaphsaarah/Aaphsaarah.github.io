@@ -1,8 +1,11 @@
 ---
-title: 'Mirror mirror on the wall who has the awesome plot in the world - Its
-  Waffle Plot! '
----
+title: "Blog"
+subtitle: Mirror mirror on the wall who has the awesome plot in the world - Its Waffle Plot!
 
+---
+# **Mirror mirror on the wall who has the awesome plot in the world - Its Waffle Plot!**
+
+*Aaphsaarah Rahman*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
 	error = FALSE,
@@ -11,28 +14,36 @@ knitr::opts_chunk$set(
 )
 ```
 
-    
-    
+
    
 
+ 
 Is it really important to make the plots look good, readable for clients?
 
 Yes! It’s very important.
 
-We often see a histogram or bar chart in the data visualisation section to interpret data, which is pretty monotonous. So I got around these amazing Waffle plot. Waffle plot looks like waffle hence the name.
+We often see a histogram or bar chart in the data visualisation section to interpret data, which is pretty monotonous. So I got around these amazing Waffle plots. Waffle plot looks like waffle hence the name.
 
 ```{r, out.width = '30%', fig.align="center", echo = FALSE}
  
 library(knitr)
 include_graphics("waffle.jpg")
 ```
+
 To get started we need to install these packages.   
 Waffle and Hrbrthemes package includes the icon as a square box, which can be customized according to our means. Hrbrthemes can be installed from Github.
 Extrafont package makes it easier to use fonts other than the basic PostScript fonts that R uses. Fonts that are imported into extrafont can be used with PDF or PostScript output files. 
 And few basic library as "ggplot2", "dplyr", "tidyverse" needs to be loaded as well.
 
 ```{r, eval=FALSE}
- install.packages(c("waffle", "extrafont", "Hrbrthemes"))
+library(devtools)
+install.packages(c("waffle", "extrafont", "ggplot2","hrbrthemes"))
+```
+
+
+```{r, eval=FALSE}
+install.packages("hrbrthemes", repos = "https://cinc.rud.is")
+
 ```
 
 
@@ -44,12 +55,13 @@ library(extrafont)
 library(waffle)
 library(hrbrthemes)
 library(dplyr)
+
 ```
  
   
   
 
-# Simplest waffle Plot  
+ **Simplest waffle Plot**
 
 This is a simplest usage of a waffle plot.
 Pluging five values(20,40,10,5,25), with five rows and giving a title 
@@ -81,9 +93,10 @@ fruit_data<- fruit_df %>%
   count(Fruits, wt = vals) %>%  #count the no. of fruits and the values of them
   ggplot(aes(fill = Fruits, values = n))+ #making the ggplot, fill by fruits, and values set by the count above
   coord_equal() + #keeps the waffle plot box ratio as one
-  theme_ipsum_rc(grid="") + #omits the grid and 
-  theme_enhance_waffle() #  it enhance the plot, omits axis elements from the plot
+  theme_ipsum_rc(grid="")  #omits the grid and 
+  #  it enhance the plot, omits axis elements from the plot
   
+ 
 ```
    
       
@@ -91,12 +104,15 @@ fruit_data<- fruit_df %>%
 
 # Simple waffle plot   
 
-This is plain waffle. It uses the syntax geom_waffle(). It worls similar to waffle() function. Flip parameter makes the plot in horizontal position otherwise it would be vertical, n_rows sets the no. of row for the base of plot and size is its size of box.
+This is plain waffle. It uses the syntax geom_waffle(). It works similar to waffle(). Flip parameter makes the plot in horizontal position otherwise it would be vertical, n_rows sets the no. of row for the base of plot and size is its size of box.
 ```{r, fig.align= "center", fig.width= 5, fig.height= 3}
+
+
 fruit_data +
   geom_waffle(
     n_rows = 15, size = 0.33, colour = "white", flip = TRUE
   )
+geom
 ```
    
      
@@ -124,8 +140,8 @@ fruit_data +
   
     
 # Make waffle box into circles
-
-Let us mix things up we can also round out the corners by specifying a grid::unit() value to the radius parameter.It brings variety to the graph. This isn’t generally recommended as the goal is to enable quick mental perception for parts to the whole and the rounded corners can delay and/or skew said interpretation.
+  
+Let us mix things up we can round out the corners by specifying a grid::unit() value to the radius parameter. It brings variety to the graph. This isn’t generally recommended as the goal is to enable quick mental perception for parts to the whole and the rounded corners can delay and/or skew said interpretation
 ```{r , fig.align= "center", fig.width= 5, fig.height= 3}
 fruit_data +
   geom_waffle(
@@ -150,7 +166,7 @@ fruit_data+
 ```
 
 
-There is another Waffle plot which includes icons inside, Github page argues that the argument use_glyph can be used to replace the tiles by pictures from the extrafont package. However, I could not get the code to work. 
+There is another Waffle plot which includes icons inside, Github page argues that the argument use_glyph can be used to replace the tiles by pictures from the extrafont package, however, I could not get the code to work. 
 
 Waffle plot is easy to understand and not monotonous like histogram. Its easy to grab the information from the graph. Its even readable for people who is not from a technical background.
 

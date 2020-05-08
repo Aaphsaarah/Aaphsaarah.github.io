@@ -9,7 +9,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Aaphsaarah Rahman" />
 
 
 <title>Baby birthweight matters!</title>
@@ -24,6 +23,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
@@ -253,6 +253,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -366,7 +369,7 @@ div.tocify {
       <a href="blog.html">Waffle Plot!</a>
     </li>
     <li>
-      <a href="Birthweight.html">Baby birthweight matters!</a>
+      <a href="birthweight.html">Baby birthweight matters!</a>
     </li>
     <li>
       <a href="heart_disease.html">Analysis and Prediction of Heart Disease</a>
@@ -406,12 +409,6 @@ div.tocify {
      
   </a>
 </li>
-<li>
-  <a href="https://www.linkedin.com/in/aaphsaarah-rahman/">
-    <span class="fa fa-linkedin fa-lg"></span>
-     
-  </a>
-</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -419,15 +416,24 @@ div.tocify {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Baby birthweight matters!</h1>
-<h4 class="author">Aaphsaarah Rahman</h4>
-<h4 class="date">4/14/2020</h4>
 
 </div>
 
 
+<div id="author-aaphsaarah-rahman" class="section level4">
+<h4><em>Author: Aaphsaarah Rahman</em></h4>
+</div>
 <div id="abstact" class="section level2 tabset">
 <h2>Abstact</h2>
 <p>Low birthweight (weighing less than 2500 grams) is an outcome that has been of concern to physicians for years. This is due to the fact that infant mortality rates and birth defect rates are very high for low birthweight babies. A woman’s risk factors during pregnancy (including smoking habits, hypertension status, weight, etc.) can greatly alter the chances of carrying the baby to term and, consequently, of delivering a baby of normal birthweight. The variables identified in the file have been shown to be associated with low birthweight in the obstetrical literature. The goal of the current study was to ascertain if these variables were important in the population being served by the medical center where the data were collected.</p>
@@ -1558,6 +1564,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

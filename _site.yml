@@ -8,7 +8,7 @@ navbar:
         - text: "Waffle Plot!" 
           href:  blog.html
         - text: "Baby birthweight matters!" 
-          href:  Birthweight.html
+          href:  birthweight.html
         - text: "Analysis and Prediction of Heart Disease" 
           href:  heart_disease.html
         - text: "IMDB and TMDB Analysis" 
@@ -24,9 +24,7 @@ navbar:
       href: https://www.facebook.com/apsarah.rahman
     - icon: fa-linkedin fa-lg
       href: https://www.linkedin.com/in/aaphsaarah-rahman/  
-    - icon: fa-linkedin fa-lg
-      href: https://www.linkedin.com/in/aaphsaarah-rahman/  
-      
+   
           
 output:
   html_document

@@ -1,16 +1,13 @@
 ---
 title: "Analysis and Prediction of Heart Disease "
 
-
-author: "Aaphsaarah Rahman"
-date: "4/9/2020"
 output:
   html_document:
     code_folding: hide
     toc: true
     toc_float: true
 ---
-
+#### *Author: Aaphsaarah Rahman*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
 	echo = TRUE,

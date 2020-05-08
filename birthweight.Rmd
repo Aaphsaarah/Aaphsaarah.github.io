@@ -1,13 +1,12 @@
 ---
 title: "Baby birthweight matters!"
-
-author: "Aaphsaarah Rahman"
-date: "4/14/2020"
 output:
   html_document:
+    code_folding: hide
     toc: true
     toc_float: true
 ---
+#### *Author: Aaphsaarah Rahman*
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
