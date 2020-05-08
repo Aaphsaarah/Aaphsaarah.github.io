@@ -1,0 +1,559 @@
+---
+title: "Baby birthweight matters!"
+
+author: "Aaphsaarah Rahman"
+date: "4/14/2020"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(ggfortify)
+library(kableExtra)
+#library(dotwhisker)
+library(data.table)
+library(table1)
+library(knitr)
+library(mlr)
+library(gridExtra)
+library(compareGroups)
+library(readxl)
+library(plyr)
+library(ggplot2)
+library(GGally)
+library(corrplot)
+library(Hmisc)
+library(ggpubr)
+library(ROCR)
+library(pROC)
+library(nnet)
+```
+
+```{r}
+
+```
+
+
+## Abstact  {.tabset} 
+Low birthweight (weighing less than 2500 grams) is an outcome that has been of concern to physicians for years.  This is due to the fact that infant mortality rates and birth defect rates are very high for low birthweight babies.  A woman's risk factors during pregnancy (including smoking habits, hypertension status, weight, etc.) can greatly alter the chances of carrying the baby to term and, consequently, of delivering a baby of normal birthweight.  The variables identified in the file have been shown to be associated with low birthweight in the obstetrical literature.  The goal of the current study was to ascertain if these variables were important in the population being served by the medical center where the data were collected.
+
+Here we are going to perform a statistical analysis of the data to assess the independent effect of the four predictor variables on the dependent variable of low birthweight (birthweight < 2500 grams). We are going to perform both crude (unadjusted) and adjusted (multivariable) analysis. For the multivariable model, will retain all explored predictors in the model. Evaluate a potential interaction between mother’s weight at the last menstrual period and hypertension status.
+
+Dataset of Birthweight can be found [here](Birthweight_data.xls) .
+
+## Methology {.tabset}
+
+Firstly, cleaned the data and checked for missing values. There were none. Formed a summary table of all the data inside and inspected it. It had all the mean , median, range and character type of each variables.   
+ 
+Then factorized and categorized suitable values. Categorized birthweight into 'LOW' and 'NORMAL'. 
+   
+Secondly, performed chisq-test and t-test with categorical and numerical variable, respectively. And incorporated p-values,associated mean, median and proportion and percentage of occurance with LOW and NORMAL birthweight into the table in SUMMARY TABLE ONE.        
+  
+Thirdly, did univariate data analysis of all individual predictors with visualization. 
+   
+Forth, did various linear and logistic regression modeling to get suitable final results to interpret which predictor is more significant.  
+  
+Later categorized Mother's age and weight in the last mensuration for further analysis.    
+       
+Performed more multivariable regression model. Used backward selection process in GLM to conclude the best fit model.The final model includes Age as log(age) offset. It was cleared that age is not significant so its was offset from the model. It was better to offset rather than fully exclude from the model. Then plotted ROC curve to measure usefulness of the model with sensitivity ans specificity.
+
+
+Evaluated association between Mother's weight, hypertension status, and Babies birth weight using GLM binomial and plotted ROC curve and histogram of the combined effect..
+
+For all hypothesis test and modeling, considered the level of significant to be 0.05, and confidence interval to be 95%.
+
+
+
+## Data Analysis   {.tabset}
+## Raw data summary  {.tabset}  
+
+In this dataset there is no missing data. The 4 predictors are low birthweight are Maternal Age  (in years), Mother's Weight at Last Menstrual Period (in pounds), Smoking Status and Hypertension Status of the mother. Birthweight is our response. Mean , Median, maximun and minimun are given below. Mother's age range  were from 14 to 45 at birth. There weight at last mensuration ranged from 80 to 250 pounds.  
+  
+
+###  Raw Data
+   
+
+```{r}
+Birthweight <- read_excel("~/cornell_courses/Masters project 2/Birthweight project.xls")
+
+summarizeColumns(Birthweight) %>% 
+  knitr::kable( caption =  'Feature Summary of Birthweight data before Data Preprocessing')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+
+```
+
+```{r}
+# Categorize and rename
+Birthweight$`Smoking Status`=as.factor(Birthweight$`Smoking Status`)
+Birthweight$`Smoking Status`  = relevel(factor(Birthweight$`Smoking Status`), ref = "Non-smoker")
+
+
+Birthweight$`Hypertension Status`=as.factor(Birthweight$`Hypertension Status`)
+Birthweight$`Hypertension Status`  = relevel(factor(Birthweight$`Hypertension Status`), ref = "No Hypertension")
+
+
+
+
+
+colnames(Birthweight)[colnames(Birthweight)  %in% 
+c("Subject ID"  ,                                        
+ "Maternal Age (in years)"   ,                          
+ "Mother's Weight at Last Menstrual Period (in pounds)",
+ "Smoking Status"             ,                         
+ "Hypertension Status"         ,                        
+ "Birthweight (in grams)")] <- c("Subject_ID", "Maternal_Age" , "Mother_Weight", "Smoking_Status", "Hypertension_Status","Birthweight_Baby" )
+
+
+Birthweight$Birthweight_Baby_Type = NULL
+Birthweight$Birthweight_Baby_Type [Birthweight$Birthweight_Baby <2500] = "Low"
+Birthweight$Birthweight_Baby_Type [Birthweight$Birthweight_Baby >= 2500] = "Normal"
+Birthweight$Birthweight_Baby_Type = factor(Birthweight$Birthweight_Baby_Type)
+Birthweight$Birthweight_Baby_Type  = relevel(factor(Birthweight$Birthweight_Baby_Type), ref = "Low")
+
+#table(Birthweight$Birthweight_Baby_Type )
+#a1= addmargins(table(Birthweight_Baby_Type = Birthweight$Birthweight_Baby_Type , Smoking_status=Birthweight$Smoking_Status ))
+
+
+
+```
+  
+  
+  
+## Summary Table ONE Of Association {.tabset}    
+Performed suitable hypothesis test. T-test with numeric data and chisq-test with categorical data to find which variable have significant associated with baby birth weight.  
+Mothers weight at last mensuration, smoking status are significant as there p-value is less than 0.05. And hypertension status, maternal age are not significant as there p-value is greater than 0.05.  
+
+```{r}
+rndr <- function(x, name, ...) {
+    if (length(x) == 0) {
+        y <- table_names[[name]]
+        s <- rep("", length(render.default(x=y, name=name, ...)))
+        if (is.numeric(y)) {
+            p <- t.test(y ~ table_names$Birthweight_Baby_Type)$p.value
+        } else {
+            p <- chisq.test(table(y, droplevels(table_names$Birthweight_Baby_Type)))$p.value
+        }
+        s[2] <- sub("<", "&lt;", format.pval(p, digits=3, eps=0.001))
+        s
+    } else {
+        render.default(x=x, name=name, ...)
+    }
+}
+
+
+rndr.strat <- function(label, n, ...) {
+    ifelse(n==0, label, render.strat.default(label, n, ...))
+}
+```
+
+
+```{r}
+table_names<- Birthweight  %>%
+  select( Maternal_Age, Mother_Weight, Smoking_Status , Hypertension_Status ,
+         Birthweight_Baby_Type) %>%
+  mutate(         Birthweight_Baby_Type = ifelse(is.na(Birthweight_Baby_Type), NA,
+                        ifelse(Birthweight_Baby_Type == 'Low', "Low Birthweight",
+                               ifelse(Birthweight_Baby_Type == 'Normal', "Normal Birthweight","error"))) %>%
+           factor(levels = c("Low Birthweight", "Normal Birthweight", "P-value")))
+
+table1(~ Maternal_Age+
+       Mother_Weight+ 
+       Smoking_Status +
+       Hypertension_Status |Birthweight_Baby_Type, 
+       data = table_names,
+       droplevels = F,
+       render = rndr,
+       render.strat = rndr.strat,
+       overall = F)
+```
+
+
+## Univariate Data visualization {.tabset}
+ 
+###  Age   
+
+In this histogram plot, Mother's age range from 14 to 45 and there associated baby birthweight is present .    
+There are large peaks at age- 17, 20, 21, 23-26 they have a higher rate of having low birth weight baby. It looks there are higher chance in low birthweight in younger age less than 26.   
+Fewer women give birth at an age lower than 16 and they have a higher risk of low birthweight babies. The rate of low birth weight decreases after age 25. Maybe because women get more educated and more cautious about pregnancies.    
+Overall from ages 16 to 26 and 28 onwards, there are many mothers with normal baby birth weight. 
+There is a drop in age 26 and 27. Fewer women got pregnant at this age.    
+There is an outlier at age 45, being pregnant at this age is rare and on top, the baby had normal birth weight.     
+
+
+```{r}
+# graphicar representation of there association.
+
+plot_names <- Birthweight  %>%
+  select(  Maternal_Age  ,
+         Birthweight_Baby_Type)  %>%
+
+  gather(key = "key", value = "value", -Birthweight_Baby_Type)
+
+#Visualize with bar plot
+plot_continouss<-plot_names %>% 
+  ggplot(aes(value)) +
+    geom_bar(aes(x        = value, 
+                 fill     = Birthweight_Baby_Type), 
+                 alpha    = .6, 
+                 position = "dodge", 
+                 #color    = "black",
+                 width    = .8
+             ) +
+    labs(x = "",
+         y = "",
+         title = "Scaled Effect of Mother's age") +
+    theme() +
+    facet_wrap(~ key, scales = "free", nrow = 2) +
+    scale_fill_manual(
+         values = c("magenta", "blue"),
+         name   = "Birth\nWeigth")
+         #labels = c("Low", "Normal"))
+
+plot_continouss
+```
+
+### Weight 
+  
+In Mother's Weight distribution plot. Mothers with weight < 125 have a higher chance of low birth weight in their babies. See a spike at age 120 with normal birth weight and most birth. The rate of low birth decreases after weight 150.There are a few mothers with weight >175 are there are most likely to give birth with normal birth weight.  
+```{r}
+plot_conti <- Birthweight  %>%
+ select(   Mother_Weight, 
+       Birthweight_Baby_Type)  %>%
+
+gather(key = "key", value = "value", -Birthweight_Baby_Type)
+
+#Visualize numeric variables as boxplots
+plot_conti<-plot_conti %>% 
+  ggplot(aes(y = value)) +
+       geom_histogram(aes(fill = Birthweight_Baby_Type),
+                      alpha  = .6) +
+        labs(x = "",
+             y = "",
+             title = "Effect of Mother's Weight ") +
+      scale_fill_manual(
+            values = c("magenta", "blue"),
+         name   = "Birth\nWeigth")+
+      theme() +
+      facet_wrap( ~ key  , 
+                scales = "free", 
+                 ncol   = 2)  +coord_flip()
+
+plot_conti
+```
+
+### Smoking and hypertension
+   
+This shows there is small no. of the woman with hypertension and they have a higher rate in low birth weight comparatively. And mothers with no hypertension have a higher rate of having normal baby birth weight.   
+    
+Non-smokers have a higher rate of normal birth weight. But mothers with smoking habits have a somewhat higher rate with normal birth weight but having low birth weight is also higher in smokers.
+ 
+```{r}
+# graphicar representation of there association.
+
+plot_catg <- Birthweight  %>%
+  select(  Smoking_Status , Hypertension_Status ,
+         Birthweight_Baby_Type)  %>%
+
+  gather(key = "key", value = "value", -Birthweight_Baby_Type)
+
+#Visualize with bar plot
+plot_catgprical<- plot_catg %>% 
+  ggplot(aes(value)) +
+    geom_bar(aes(x        = value, 
+                 fill     = Birthweight_Baby_Type), 
+                 alpha    = .6, 
+                 position = "dodge", 
+                 color    = "black",
+                 width    = .8
+             ) +
+    labs(x = "",
+         y = "",
+         title = "Scaled Effect of Categorical Variables") +
+    theme() +
+    facet_wrap(~ key, scales = "free", nrow = 5) +
+    scale_fill_manual(
+         values = c("magenta", "blue"),
+         name   = "Birth\nWeigth")
+         #labels = c("NORMAL", "LOW")) 
+
+plot_catgprical
+```
+  
+ 
+ 
+## Regrssion Models  {.tabset}   
+
+
+
+### Linear  
+Here we can see a linear model for Birthweight(continuous) as a response with 4 predictors Mother's age, weight at LM, smoking habit and hypertension status. Other than Age all 3 predictors are significant as p-value<0.05. They do influence there babies birth weight.      
+For an increase in Mother weight, the baby's birth weight is expected to rise by 5.2 grams.    
+For Mothers with a smoking habit, the baby's birth weight is expected to decrease by 262 grams compared to non-smokers and having other parameters constant. It has a great effect.    
+For Mothers with hypertension, the baby's birth weight is expected to rise by 579 grams compared to patients with no hypertension disease.       
+    
+This model is significant as its overall p-value <0.05 and with 10% variance. The model is valid.
+
+```{r}
+lm_birthweight<- lm(Birthweight_Baby~ . -Birthweight_Baby_Type-Subject_ID , data=Birthweight)
+summary(lm_birthweight)
+#lm_birthweight<- glm(Birthweight_Baby~ . -Birthweight_Baby_Type-Subject_ID , data=Birthweight, family = gaussian(link = "identity"))
+#summary(lm_birthweight)
+#round(exp(cbind(Odds_ratio = coef(lm_birthweight), confint(lm_birthweight,level = 0.95))), 3)
+
+```
+
+
+### Logistic Modal    
+  
+Here the model is built with the Birth weight(categorical) as Low and Normal. (adjusted)
+This model is similar to linear model. Here weight , smoking status and hypertension status is significant and have great influence over the babies birth weight.   
+Odds ratio are significant in those where there is no 1.0 in the confidence interval.    
+Odds ratio of weight is 1.017 means it has higher odds. As weight increase the baby have higher chance of normal birthweight. and its significant (valid as it contains 1.0 in 95% confidence interval.)  
+Odds ratio is smoking status is 0.5 means it is associated with lower odds. There is higher chance of smoking affecting birth rate and having low birthweight. Same for hypertension. 
+AIC =230 means its a good model.
+```{r}
+
+lm_birthweight<- glm(Birthweight_Baby_Type~ . -Birthweight_Baby-Subject_ID , data=Birthweight, family = binomial(link = "logit"))
+summary(lm_birthweight)
+round(exp(cbind(Odds_ratio = coef(lm_birthweight), confint(lm_birthweight,level = 0.95))), 3) %>% 
+  knitr::kable( caption =  'Odds ratio with 95% CI of Birthweight logistic model')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+
+```
+
+## Multivariable Rgression Model {.tabset}
+
+Categorized mother's age into Age<17, 17≤Age≤26, Age> 26.    
+Categorized mother's weight at last mensuration into Weight<125, 125≤Weight≤200, Age>200.
+In Summary Two table, those categorized age and weight were insignificant as p-value>0.05. Only smoking status and weight(cintinous) are significant.  
+
+With the GLM full model performed a backward selection process to chose the best model.
+
+The final model includes Age as log(age) offset. It was cleared that age is not significant so its was offset from the model. It was better to offset rather than fully exclude from the model.
+
+```{r}
+# categorizing Maternal age and weight
+Birthweight$Maternal_Age_Group = NULL
+Birthweight$Maternal_Age_Group [Birthweight$Maternal_Age <17] = "Age<17"
+Birthweight$Maternal_Age_Group [Birthweight$Maternal_Age >=17 & Birthweight$Maternal_Age <= 26] ="Age[17-26]"
+Birthweight$Maternal_Age_Group [Birthweight$Maternal_Age >= 27] = "Age>26"
+Birthweight$Maternal_Age_Group = factor(Birthweight$Maternal_Age_Group)
+Birthweight$Maternal_Age_Group  = relevel(factor(Birthweight$Maternal_Age_Group),levels=c("Age<17","Age[17-26]","Age>26"), ref = "Age<17")
+
+#table(Birthweight$Maternal_Age_Group )
+
+Birthweight$Mother_Weight_Group = NULL
+Birthweight$Mother_Weight_Group [Birthweight$Mother_Weight <125] = "Weight<125"
+Birthweight$Mother_Weight_Group [Birthweight$Mother_Weight >=125 & Birthweight$Mother_Weight <= 200] = " Weight [125-200] "
+Birthweight$Mother_Weight_Group [Birthweight$Mother_Weight > 200] = "Weight>200"
+Birthweight$Mother_Weight_Group = factor(Birthweight$Mother_Weight_Group)
+#Birthweight$Mother_Weight_Group  = relevel(factor(Birthweight$Mother_Weight_Group),levels= c("Weight<150", "Weight>150" ), ref = "Weight>150")
+
+#table(Birthweight$Mother_Weight_Group )
+#b= addmargins(table(All = Birthweight$Hypertension_Status, smoking=Birthweight$Smoking_Status))
+##b
+#C= addmargins(table(All = Birthweight$Hypertension_Status, smoking=Birthweight$Smoking_Status, B = Birthweight$Birthweight_Baby_Type))
+#C
+
+```
+
+### Summary Table Two   
+
+In Summary Two table, those categorized age and weight were insignificant as p-value>0.05. Only smoking status and weight(cintinous) are significant.
+```{r}
+
+
+table_names<- Birthweight  %>%
+  select( Maternal_Age, Maternal_Age_Group,Mother_Weight,Mother_Weight_Group, Smoking_Status , Hypertension_Status ,
+         Birthweight_Baby_Type) %>%
+  mutate(         Birthweight_Baby_Type = ifelse(is.na(Birthweight_Baby_Type), NA,
+                        ifelse(Birthweight_Baby_Type == 'Low', "Low Birthweight",
+                               ifelse(Birthweight_Baby_Type == 'Normal', "Normal Birthweight","error"))) %>%
+           factor(levels = c("Low Birthweight", "Normal Birthweight", "P-value")))
+
+table1(~ Maternal_Age+
+       Maternal_Age_Group+
+         Mother_Weight+ 
+       Mother_Weight_Group+
+         Smoking_Status +
+       Hypertension_Status |Birthweight_Baby_Type, 
+       data = table_names,
+       droplevels = F,
+       render = rndr,
+       render.strat = rndr.strat,
+       overall = F)
+```
+
+### Regressim model 
+
+With the GLM full model performed a backward selection process to chose the best model.
+
+```{r}
+lm_birthweight<- glm(Birthweight_Baby_Type~. -Birthweight_Baby-Subject_ID , data=Birthweight, family = binomial(link = "logit"))
+summary(lm_birthweight)
+round(exp(cbind(Odds_ratio = coef(lm_birthweight), confint(lm_birthweight,level = 0.95))), 3) %>% 
+  knitr::kable( caption =  'Odds ratio with 95% CI of Birthweight logistic model')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+#fit_backward = step(lm_birthweight, direction = "backward")
+```
+
+### Final model 
+
+The final model includes Age as log(age) offset. It was cleared that age is not significant so its was offset from the model. It was better to offset rather than fully exclude from the model.  
+All predictors are significant as p-value<0.05.  Log of Weight has positive effect on Birth weight. And smoking and hypertension have negative effect. Having hypertention reduced the baby birth weight be log odds by 1.7 unit.
+Odds ratio of smoking and hypertention are less than 1. Means the odds of having low birthweight in baby with smoking habit and hypertention is more likely. 
+```{r}
+Final_glm<- glm(Birthweight_Baby_Type~  offset(log(Maternal_Age))+
+              log(Mother_Weight)+ 
+                Smoking_Status +
+       Hypertension_Status , data=Birthweight, family = binomial(link = "logit"))
+
+summary(Final_glm)
+
+round(exp(cbind(Odds_ratio = coef(Final_glm), confint(Final_glm,level = 0.95))), 3) %>% 
+  knitr::kable( caption =  'Odds ratio with 95% CI of Birthweight Final logistic model')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+```
+
+### ROC 
+
+Area under the plot =0.6955. Its the normality check.
+It proves, it does do a good job in predicting Birthweight, AUC= 0.7 closer to 1 meaning it a good measure of separation. It is good in predicting Birthweight WITH case or control. It has 70% chance that model will be able to distinguish between positive case and negative case. Roc curve is left facing with more on the left upper side. Its an good curve.
+```{r}
+roc(Birthweight$Birthweight_Baby_Type, Final_glm$fitted.values)
+
+rocplot = function(truth, pred,tit,  ...) {
+  predob = prediction(pred, truth)
+  perf = performance(predob, "tpr", "fpr")
+  plot(perf, ...)
+  area = auc(truth, pred)
+  area = format(round(area, 4), nsmall = 4)
+  text(x=0.8, y=0.1, labels = paste("AUC =", area))
+  title(tit)
+  
+  # the reference x=y line
+  segments(x0=0, y0=0, x1=1, y1=1, col="red", lty=2)
+}
+
+rocplot(Birthweight$Birthweight_Baby_Type, Final_glm$fitted.values, 'ROC plot ')
+```
+
+## Mother's weigt ~ Hypertention  {.tabset}
+
+This is to evaluate the interaction between mother's weight at last mensuration and hypertension associated with birthweight.
+
+
+### Regression model 
+  
+In logistic regression model both weight and hypertension are significant predictor of birh weight as p-value <0.05 . Did not choose categorical weight as predictor as there were not signiifcant in the model.
+Odds ratio of weigth = 1.01, means it has higher odds of having low birth weight at younger age. 
+Odds ratio of hypertension = 0.015, means it has lower odds. 
+```{r}
+weight_hyp<-  glm(Birthweight_Baby_Type~ Mother_Weight +  Hypertension_Status , data=Birthweight, family = binomial(link = "logit"))
+
+summary(weight_hyp)
+round(exp(cbind(Odds_ratio = coef(weight_hyp), confint(weight_hyp,level = 0.95))), 3)  %>% 
+  knitr::kable( caption =  'Odds ratio with 95% CI ')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+
+```
+### Roc   
+
+The model AUC=0.675.    
+It proves, it does do a good job in predicting Birthweight associated with hypertension and motheres weight at LM. AUC= 0.675 closer to 1 meaning it a good measure of separation. It is good in predicting Birthweight with case or control. It has 67.5% chance that model will be able to distinguish between positive case and negative case. Roc curve is left facing with more on the left upper side. Its an good curve.
+```{r}
+roc(Birthweight$Birthweight_Baby_Type, weight_hyp$fitted.values)
+rocplot(Birthweight$Birthweight_Baby_Type, weight_hyp$fitted.values, 'ROc plot')
+
+```
+
+###  Data visualization
+
+It shows there were fewer women with hypertension in the study. And woman with hypertension and weight between 125 and 200 have higher chance of having child with birth weight.
+```{r}
+
+
+ggplot(data=Birthweight, aes(x=Mother_Weight, fill=Birthweight_Baby_Type ))+
+  geom_histogram()+
+  labs(title = "Association of Hypertension with Mothers's weight at LM ")+
+  theme() +
+    facet_wrap(~ Hypertension_Status, scales = "free", nrow = 2) 
+
+
+```
+
+
+## Conclusion {.tabset}
+
+It seems like mother's weight, hypertension and smoking habit does influence bithweight. Low birthweight(<2500) is influenced with having hypertension, smoking habit and mothers weight being lower.
+As mothers' weight increases birthweight increses. If a mothere has hypertension then there baby's weight will be lower compared to non-hypertension woman. If the mother smokes then she does have a higher chance for having low baby birthweight.   
+Having a combination of hypertension and heavier mother's weight does influences low birthweight. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+                         

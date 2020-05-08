@@ -4,14 +4,29 @@ navbar:
   title: "About Me"
   right:
     - text: "Blog"
-      href: blog.html
+      menu:
+        - text: "Waffle Plot!" 
+          href:  blog.html
+        - text: "Baby birthweight matters!" 
+          href:  Birthweight.html
+        - text: "Analysis and Prediction of Heart Disease" 
+          href:  heart_disease.html
+        - text: "IMDB and TMDB Analysis" 
+          href:  IMDB.html
+        
     - icon: fa-envelope fa-lg
       href: mailto:<apsarah.rahman@gmail.com>
     - icon: fa-github fa-lg
       href: https://github.com/Aaphsaarah
     - icon: fa-twitter fa-lg
       href: https://twitter.com/aaphsaarah
+    - icon: fa-facebook fa-lg
+      href: https://www.facebook.com/apsarah.rahman
     - icon: fa-linkedin fa-lg
-      href: https://www.linkedin.com/in/aaphsaarah-rahman/      
+      href: https://www.linkedin.com/in/aaphsaarah-rahman/  
+    - icon: fa-linkedin fa-lg
+      href: https://www.linkedin.com/in/aaphsaarah-rahman/  
+      
+          
 output:
   html_document

@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Aaphsaarah Rahman" />
+
+
+<title>Baby birthweight matters!</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/table1-1.0/table1_defaults.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">About Me</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Blog
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="blog.html">Waffle Plot!</a>
+    </li>
+    <li>
+      <a href="Birthweight.html">Baby birthweight matters!</a>
+    </li>
+    <li>
+      <a href="heart_disease.html">Analysis and Prediction of Heart Disease</a>
+    </li>
+    <li>
+      <a href="IMDB.html">IMDB and TMDB Analysis</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="mailto:&lt;apsarah.rahman@gmail.com&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/Aaphsaarah">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/aaphsaarah">
+    <span class="fa fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.facebook.com/apsarah.rahman">
+    <span class="fa fa-facebook fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/aaphsaarah-rahman/">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/aaphsaarah-rahman/">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Baby birthweight matters!</h1>
+<h4 class="author">Aaphsaarah Rahman</h4>
+<h4 class="date">4/14/2020</h4>
+
+</div>
+
+
+<div id="abstact" class="section level2 tabset">
+<h2>Abstact</h2>
+<p>Low birthweight (weighing less than 2500 grams) is an outcome that has been of concern to physicians for years. This is due to the fact that infant mortality rates and birth defect rates are very high for low birthweight babies. A woman’s risk factors during pregnancy (including smoking habits, hypertension status, weight, etc.) can greatly alter the chances of carrying the baby to term and, consequently, of delivering a baby of normal birthweight. The variables identified in the file have been shown to be associated with low birthweight in the obstetrical literature. The goal of the current study was to ascertain if these variables were important in the population being served by the medical center where the data were collected.</p>
+<p>Here we are going to perform a statistical analysis of the data to assess the independent effect of the four predictor variables on the dependent variable of low birthweight (birthweight &lt; 2500 grams). We are going to perform both crude (unadjusted) and adjusted (multivariable) analysis. For the multivariable model, will retain all explored predictors in the model. Evaluate a potential interaction between mother’s weight at the last menstrual period and hypertension status.</p>
+<p>Dataset of Birthweight can be found <a href="Birthweight_data.xls">here</a> .</p>
+</div>
+<div id="methology" class="section level2 tabset">
+<h2>Methology</h2>
+<p>Firstly, cleaned the data and checked for missing values. There were none. Formed a summary table of all the data inside and inspected it. It had all the mean , median, range and character type of each variables.</p>
+<p>Then factorized and categorized suitable values. Categorized birthweight into ‘LOW’ and ‘NORMAL’.</p>
+<p>Secondly, performed chisq-test and t-test with categorical and numerical variable, respectively. And incorporated p-values,associated mean, median and proportion and percentage of occurance with LOW and NORMAL birthweight into the table in SUMMARY TABLE ONE.</p>
+<p>Thirdly, did univariate data analysis of all individual predictors with visualization.</p>
+<p>Forth, did various linear and logistic regression modeling to get suitable final results to interpret which predictor is more significant.</p>
+<p>Later categorized Mother’s age and weight in the last mensuration for further analysis.</p>
+<p>Performed more multivariable regression model. Used backward selection process in GLM to conclude the best fit model.The final model includes Age as log(age) offset. It was cleared that age is not significant so its was offset from the model. It was better to offset rather than fully exclude from the model. Then plotted ROC curve to measure usefulness of the model with sensitivity ans specificity.</p>
+<p>Evaluated association between Mother’s weight, hypertension status, and Babies birth weight using GLM binomial and plotted ROC curve and histogram of the combined effect..</p>
+<p>For all hypothesis test and modeling, considered the level of significant to be 0.05, and confidence interval to be 95%.</p>
+</div>
+<div id="data-analysis" class="section level2 tabset">
+<h2>Data Analysis</h2>
+</div>
+<div id="raw-data-summary" class="section level2 tabset">
+<h2>Raw data summary</h2>
+<p>In this dataset there is no missing data. The 4 predictors are low birthweight are Maternal Age (in years), Mother’s Weight at Last Menstrual Period (in pounds), Smoking Status and Hypertension Status of the mother. Birthweight is our response. Mean , Median, maximun and minimun are given below. Mother’s age range were from 14 to 45 at birth. There weight at last mensuration ranged from 80 to 250 pounds.</p>
+<div id="raw-data" class="section level3">
+<h3>Raw Data</h3>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Feature Summary of Birthweight data before Data Preprocessing
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+name
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+type
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+na
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+mean
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+disp
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+median
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+mad
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+min
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+max
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+nlevs
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Subject ID
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+121.0794
+</td>
+<td style="text-align:right;">
+63.3036338
+</td>
+<td style="text-align:right;">
+123
+</td>
+<td style="text-align:right;">
+80.0604
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+226
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maternal Age (in years)
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+23.2381
+</td>
+<td style="text-align:right;">
+5.2986779
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+5.9304
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mother’s Weight at Last Menstrual Period (in pounds)
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+129.8201
+</td>
+<td style="text-align:right;">
+30.5751501
+</td>
+<td style="text-align:right;">
+121
+</td>
+<td style="text-align:right;">
+20.7564
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+250
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Smoking Status
+</td>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+0.3915344
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+74
+</td>
+<td style="text-align:right;">
+115
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hypertension Status
+</td>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+0.0634921
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+177
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Birthweight (in grams)
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2944.2857
+</td>
+<td style="text-align:right;">
+729.0160177
+</td>
+<td style="text-align:right;">
+2977
+</td>
+<td style="text-align:right;">
+819.8778
+</td>
+<td style="text-align:right;">
+709
+</td>
+<td style="text-align:right;">
+4990
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="summary-table-one-of-association" class="section level2 tabset">
+<h2>Summary Table ONE Of Association</h2>
+<p>Performed suitable hypothesis test. T-test with numeric data and chisq-test with categorical data to find which variable have significant associated with baby birth weight.<br />
+Mothers weight at last mensuration, smoking status are significant as there p-value is less than 0.05. And hypertension status, maternal age are not significant as there p-value is greater than 0.05.</p>
+<div class="Rtable1"><table class="Rtable1">
+<thead>
+<tr>
+<th class='rowlabel firstrow lastrow'></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Low Birthweight<br><span class='stratn'>(N=59)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Normal Birthweight<br><span class='stratn'>(N=130)</span></span></th>
+<th class='firstrow lastrow'>P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Maternal_Age</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>22.3 (4.51)</td>
+<td>23.7 (5.58)</td>
+<td>0.078</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>22.0 [14.0, 34.0]</td>
+<td class='lastrow'>23.0 [14.0, 45.0]</td>
+<td class='lastrow'></td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Mother_Weight</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>122 (26.5)</td>
+<td>133 (31.7)</td>
+<td>0.013</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>120 [80.0, 200]</td>
+<td class='lastrow'>124 [85.0, 250]</td>
+<td class='lastrow'></td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Smoking_Status</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Non-smoker</td>
+<td>29 (49.2%)</td>
+<td>86 (66.2%)</td>
+<td>0.04</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Smoker</td>
+<td class='lastrow'>30 (50.8%)</td>
+<td class='lastrow'>44 (33.8%)</td>
+<td class='lastrow'></td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Hypertension_Status</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No Hypertension</td>
+<td>52 (88.1%)</td>
+<td>125 (96.2%)</td>
+<td>0.076</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Hypertension</td>
+<td class='lastrow'>7 (11.9%)</td>
+<td class='lastrow'>5 (3.8%)</td>
+<td class='lastrow'></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="univariate-data-visualization" class="section level2 tabset">
+<h2>Univariate Data visualization</h2>
+<div id="age" class="section level3">
+<h3>Age</h3>
+<p>In this histogram plot, Mother’s age range from 14 to 45 and there associated baby birthweight is present .<br />
+There are large peaks at age- 17, 20, 21, 23-26 they have a higher rate of having low birth weight baby. It looks there are higher chance in low birthweight in younger age less than 26.<br />
+Fewer women give birth at an age lower than 16 and they have a higher risk of low birthweight babies. The rate of low birth weight decreases after age 25. Maybe because women get more educated and more cautious about pregnancies.<br />
+Overall from ages 16 to 26 and 28 onwards, there are many mothers with normal baby birth weight. There is a drop in age 26 and 27. Fewer women got pregnant at this age.<br />
+There is an outlier at age 45, being pregnant at this age is rare and on top, the baby had normal birth weight.</p>
+<p><img src="birthweight_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="weight" class="section level3">
+<h3>Weight</h3>
+<p>In Mother’s Weight distribution plot. Mothers with weight &lt; 125 have a higher chance of low birth weight in their babies. See a spike at age 120 with normal birth weight and most birth. The rate of low birth decreases after weight 150.There are a few mothers with weight &gt;175 are there are most likely to give birth with normal birth weight.<br />
+<img src="birthweight_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="smoking-and-hypertension" class="section level3">
+<h3>Smoking and hypertension</h3>
+<p>This shows there is small no. of the woman with hypertension and they have a higher rate in low birth weight comparatively. And mothers with no hypertension have a higher rate of having normal baby birth weight.</p>
+<p>Non-smokers have a higher rate of normal birth weight. But mothers with smoking habits have a somewhat higher rate with normal birth weight but having low birth weight is also higher in smokers.</p>
+<p><img src="birthweight_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+</div>
+<div id="regrssion-models" class="section level2 tabset">
+<h2>Regrssion Models</h2>
+<div id="linear" class="section level3">
+<h3>Linear</h3>
+<p>Here we can see a linear model for Birthweight(continuous) as a response with 4 predictors Mother’s age, weight at LM, smoking habit and hypertension status. Other than Age all 3 predictors are significant as p-value&lt;0.05. They do influence there babies birth weight.<br />
+For an increase in Mother weight, the baby’s birth weight is expected to rise by 5.2 grams.<br />
+For Mothers with a smoking habit, the baby’s birth weight is expected to decrease by 262 grams compared to non-smokers and having other parameters constant. It has a great effect.<br />
+For Mothers with hypertension, the baby’s birth weight is expected to rise by 579 grams compared to patients with no hypertension disease.</p>
+<p>This model is significant as its overall p-value &lt;0.05 and with 10% variance. The model is valid.</p>
+<pre><code>## 
+## Call:
+## lm(formula = Birthweight_Baby ~ . - Birthweight_Baby_Type - Subject_ID, 
+##     data = Birthweight)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2094.91  -431.77     5.57   506.68  1823.06 
+## 
+## Coefficients:
+##                                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     2285.929    297.107   7.694 8.39e-13 ***
+## Maternal_Age                       5.451      9.777   0.558  0.57784    
+## Mother_Weight                      5.169      1.744   2.964  0.00344 ** 
+## Smoking_StatusSmoker            -261.851    104.062  -2.516  0.01271 *  
+## Hypertension_StatusHypertension -579.031    214.412  -2.701  0.00757 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 696.9 on 184 degrees of freedom
+## Multiple R-squared:  0.1055, Adjusted R-squared:  0.08607 
+## F-statistic: 5.426 on 4 and 184 DF,  p-value: 0.0003753</code></pre>
+</div>
+<div id="logistic-modal" class="section level3">
+<h3>Logistic Modal</h3>
+<p>Here the model is built with the Birth weight(categorical) as Low and Normal. (adjusted) This model is similar to linear model. Here weight , smoking status and hypertension status is significant and have great influence over the babies birth weight.<br />
+Odds ratio are significant in those where there is no 1.0 in the confidence interval.<br />
+Odds ratio of weight is 1.017 means it has higher odds. As weight increase the baby have higher chance of normal birthweight. and its significant (valid as it contains 1.0 in 95% confidence interval.)<br />
+Odds ratio is smoking status is 0.5 means it is associated with lower odds. There is higher chance of smoking affecting birth rate and having low birthweight. Same for hypertension. AIC =230 means its a good model.</p>
+<pre><code>## 
+## Call:
+## glm(formula = Birthweight_Baby_Type ~ . - Birthweight_Baby - 
+##     Subject_ID, family = binomial(link = &quot;logit&quot;), data = Birthweight)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.2183  -1.1885   0.6577   0.8418   1.6916  
+## 
+## Coefficients:
+##                                  Estimate Std. Error z value Pr(&gt;|z|)   
+## (Intercept)                     -1.764394   1.052241  -1.677  0.09358 . 
+## Maternal_Age                     0.035717   0.033363   1.071  0.28437   
+## Mother_Weight                    0.016928   0.006621   2.557  0.01057 * 
+## Smoking_StatusSmoker            -0.678847   0.331921  -2.045  0.04083 * 
+## Hypertension_StatusHypertension -1.787067   0.685746  -2.606  0.00916 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 234.67  on 188  degrees of freedom
+## Residual deviance: 215.71  on 184  degrees of freedom
+## AIC: 225.71
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Odds ratio with 95% CI of Birthweight logistic model
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Odds_ratio
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+2.5 %
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+97.5 %
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.171
+</td>
+<td style="text-align:right;">
+0.020
+</td>
+<td style="text-align:right;">
+1.278
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maternal_Age
+</td>
+<td style="text-align:right;">
+1.036
+</td>
+<td style="text-align:right;">
+0.972
+</td>
+<td style="text-align:right;">
+1.109
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mother_Weight
+</td>
+<td style="text-align:right;">
+1.017
+</td>
+<td style="text-align:right;">
+1.005
+</td>
+<td style="text-align:right;">
+1.031
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Smoking_StatusSmoker
+</td>
+<td style="text-align:right;">
+0.507
+</td>
+<td style="text-align:right;">
+0.263
+</td>
+<td style="text-align:right;">
+0.971
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hypertension_StatusHypertension
+</td>
+<td style="text-align:right;">
+0.167
+</td>
+<td style="text-align:right;">
+0.040
+</td>
+<td style="text-align:right;">
+0.618
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="multivariable-rgression-model" class="section level2 tabset">
+<h2>Multivariable Rgression Model</h2>
+<p>Categorized mother’s age into Age&lt;17, 17≤Age≤26, Age&gt; 26.<br />
+Categorized mother’s weight at last mensuration into Weight&lt;125, 125≤Weight≤200, Age&gt;200. In Summary Two table, those categorized age and weight were insignificant as p-value&gt;0.05. Only smoking status and weight(cintinous) are significant.</p>
+<p>With the GLM full model performed a backward selection process to chose the best model.</p>
+<p>The final model includes Age as log(age) offset. It was cleared that age is not significant so its was offset from the model. It was better to offset rather than fully exclude from the model.</p>
+<div id="summary-table-two" class="section level3">
+<h3>Summary Table Two</h3>
+<p>In Summary Two table, those categorized age and weight were insignificant as p-value&gt;0.05. Only smoking status and weight(cintinous) are significant. <div class="Rtable1"><table class="Rtable1">
+<thead>
+<tr>
+<th class='rowlabel firstrow lastrow'></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Low Birthweight<br><span class='stratn'>(N=59)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Normal Birthweight<br><span class='stratn'>(N=130)</span></span></th>
+<th class='firstrow lastrow'>P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Maternal_Age</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>22.3 (4.51)</td>
+<td>23.7 (5.58)</td>
+<td>0.078</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>22.0 [14.0, 34.0]</td>
+<td class='lastrow'>23.0 [14.0, 45.0]</td>
+<td class='lastrow'></td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Maternal_Age_Group</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Age<17</td>
+<td>5 (8.5%)</td>
+<td>8 (6.2%)</td>
+<td>0.14</td>
+</tr>
+<tr>
+<td class='rowlabel'>Age[17-26]</td>
+<td>45 (76.3%)</td>
+<td>85 (65.4%)</td>
+<td></td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Age>26</td>
+<td class='lastrow'>9 (15.3%)</td>
+<td class='lastrow'>37 (28.5%)</td>
+<td class='lastrow'></td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Mother_Weight</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>122 (26.5)</td>
+<td>133 (31.7)</td>
+<td>0.013</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>120 [80.0, 200]</td>
+<td class='lastrow'>124 [85.0, 250]</td>
+<td class='lastrow'></td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Mother_Weight_Group</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'> Weight [125-200] </td>
+<td>23 (39.0%)</td>
+<td>57 (43.8%)</td>
+<td>0.164</td>
+</tr>
+<tr>
+<td class='rowlabel'>Weight<125</td>
+<td>36 (61.0%)</td>
+<td>67 (51.5%)</td>
+<td></td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Weight>200</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>6 (4.6%)</td>
+<td class='lastrow'></td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Smoking_Status</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Non-smoker</td>
+<td>29 (49.2%)</td>
+<td>86 (66.2%)</td>
+<td>0.04</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Smoker</td>
+<td class='lastrow'>30 (50.8%)</td>
+<td class='lastrow'>44 (33.8%)</td>
+<td class='lastrow'></td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Hypertension_Status</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No Hypertension</td>
+<td>52 (88.1%)</td>
+<td>125 (96.2%)</td>
+<td>0.076</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Hypertension</td>
+<td class='lastrow'>7 (11.9%)</td>
+<td class='lastrow'>5 (3.8%)</td>
+<td class='lastrow'></td>
+</tr>
+</tbody>
+</table>
+</div></p>
+</div>
+<div id="regressim-model" class="section level3">
+<h3>Regressim model</h3>
+<p>With the GLM full model performed a backward selection process to chose the best model.</p>
+<pre><code>## 
+## Call:
+## glm(formula = Birthweight_Baby_Type ~ . - Birthweight_Baby - 
+##     Subject_ID, family = binomial(link = &quot;logit&quot;), data = Birthweight)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.1813  -1.1268   0.6383   0.8251   1.7135  
+## 
+## Coefficients:
+##                                  Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)                      -1.68354    1.99094  -0.846   0.3978  
+## Maternal_Age                     -0.01358    0.06253  -0.217   0.8281  
+## Mother_Weight                     0.01924    0.01162   1.655   0.0980 .
+## Smoking_StatusSmoker             -0.77890    0.34237  -2.275   0.0229 *
+## Hypertension_StatusHypertension  -1.89765    0.74493  -2.547   0.0109 *
+## Maternal_Age_GroupAge[17-26]      0.40352    0.73221   0.551   0.5816  
+## Maternal_Age_GroupAge&gt;26          1.09778    1.19559   0.918   0.3585  
+## Mother_Weight_GroupWeight&lt;125     0.44293    0.54880   0.807   0.4196  
+## Mother_Weight_GroupWeight&gt;200    14.80603  865.71034   0.017   0.9864  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 234.67  on 188  degrees of freedom
+## Residual deviance: 211.52  on 180  degrees of freedom
+## AIC: 229.52
+## 
+## Number of Fisher Scoring iterations: 15</code></pre>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Odds ratio with 95% CI of Birthweight logistic model
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Odds_ratio
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+2.5 %
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+97.5 %
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.186
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+8.631
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maternal_Age
+</td>
+<td style="text-align:right;">
+0.987
+</td>
+<td style="text-align:right;">
+0.874
+</td>
+<td style="text-align:right;">
+1.118
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mother_Weight
+</td>
+<td style="text-align:right;">
+1.019
+</td>
+<td style="text-align:right;">
+0.997
+</td>
+<td style="text-align:right;">
+1.044
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Smoking_StatusSmoker
+</td>
+<td style="text-align:right;">
+0.459
+</td>
+<td style="text-align:right;">
+0.233
+</td>
+<td style="text-align:right;">
+0.895
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hypertension_StatusHypertension
+</td>
+<td style="text-align:right;">
+0.150
+</td>
+<td style="text-align:right;">
+0.029
+</td>
+<td style="text-align:right;">
+0.600
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maternal_Age_GroupAge[17-26]
+</td>
+<td style="text-align:right;">
+1.497
+</td>
+<td style="text-align:right;">
+0.341
+</td>
+<td style="text-align:right;">
+6.227
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maternal_Age_GroupAge&gt;26
+</td>
+<td style="text-align:right;">
+2.998
+</td>
+<td style="text-align:right;">
+0.285
+</td>
+<td style="text-align:right;">
+31.628
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mother_Weight_GroupWeight&lt;125
+</td>
+<td style="text-align:right;">
+1.557
+</td>
+<td style="text-align:right;">
+0.528
+</td>
+<td style="text-align:right;">
+4.583
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mother_Weight_GroupWeight&gt;200
+</td>
+<td style="text-align:right;">
+2692632.091
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="final-model" class="section level3">
+<h3>Final model</h3>
+<p>The final model includes Age as log(age) offset. It was cleared that age is not significant so its was offset from the model. It was better to offset rather than fully exclude from the model.<br />
+All predictors are significant as p-value&lt;0.05. Log of Weight has positive effect on Birth weight. And smoking and hypertension have negative effect. Having hypertention reduced the baby birth weight be log odds by 1.7 unit. Odds ratio of smoking and hypertention are less than 1. Means the odds of having low birthweight in baby with smoking habit and hypertention is more likely.</p>
+<pre><code>## 
+## Call:
+## glm(formula = Birthweight_Baby_Type ~ offset(log(Maternal_Age)) + 
+##     log(Mother_Weight) + Smoking_Status + Hypertension_Status, 
+##     family = binomial(link = &quot;logit&quot;), data = Birthweight)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.1549  -1.1934   0.6519   0.8475   1.6957  
+## 
+## Coefficients:
+##                                 Estimate Std. Error z value Pr(&gt;|z|)   
+## (Intercept)                     -12.9311     4.1829  -3.091  0.00199 **
+## log(Mother_Weight)                2.2847     0.8716   2.621  0.00876 **
+## Smoking_StatusSmoker             -0.6610     0.3328  -1.986  0.04703 * 
+## Hypertension_StatusHypertension  -1.7309     0.6691  -2.587  0.00968 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 232.35  on 188  degrees of freedom
+## Residual deviance: 215.97  on 185  degrees of freedom
+## AIC: 223.97
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Odds ratio with 95% CI of Birthweight Final logistic model
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Odds_ratio
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+2.5 %
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+97.5 %
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+log(Mother_Weight)
+</td>
+<td style="text-align:right;">
+9.823
+</td>
+<td style="text-align:right;">
+1.903
+</td>
+<td style="text-align:right;">
+58.985
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Smoking_StatusSmoker
+</td>
+<td style="text-align:right;">
+0.516
+</td>
+<td style="text-align:right;">
+0.268
+</td>
+<td style="text-align:right;">
+0.991
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hypertension_StatusHypertension
+</td>
+<td style="text-align:right;">
+0.177
+</td>
+<td style="text-align:right;">
+0.044
+</td>
+<td style="text-align:right;">
+0.639
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="roc" class="section level3">
+<h3>ROC</h3>
+<p>Area under the plot =0.6955. Its the normality check. It proves, it does do a good job in predicting Birthweight, AUC= 0.7 closer to 1 meaning it a good measure of separation. It is good in predicting Birthweight WITH case or control. It has 70% chance that model will be able to distinguish between positive case and negative case. Roc curve is left facing with more on the left upper side. Its an good curve.</p>
+<pre><code>## 
+## Call:
+## roc.default(response = Birthweight$Birthweight_Baby_Type, predictor = Final_glm$fitted.values)
+## 
+## Data: Final_glm$fitted.values in 59 controls (Birthweight$Birthweight_Baby_Type Low) &lt; 130 cases (Birthweight$Birthweight_Baby_Type Normal).
+## Area under the curve: 0.6955</code></pre>
+<p><img src="birthweight_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</div>
+</div>
+<div id="mothers-weigt-hypertention" class="section level2 tabset">
+<h2>Mother’s weigt ~ Hypertention</h2>
+<p>This is to evaluate the interaction between mother’s weight at last mensuration and hypertension associated with birthweight.</p>
+<div id="regression-model" class="section level3">
+<h3>Regression model</h3>
+<p>In logistic regression model both weight and hypertension are significant predictor of birh weight as p-value &lt;0.05 . Did not choose categorical weight as predictor as there were not signiifcant in the model. Odds ratio of weigth = 1.01, means it has higher odds of having low birth weight at younger age. Odds ratio of hypertension = 0.015, means it has lower odds.</p>
+<pre><code>## 
+## Call:
+## glm(formula = Birthweight_Baby_Type ~ Mother_Weight + Hypertension_Status, 
+##     family = binomial(link = &quot;logit&quot;), data = Birthweight)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.1796  -1.2922   0.7385   0.8727   1.8591  
+## 
+## Coefficients:
+##                                  Estimate Std. Error z value Pr(&gt;|z|)   
+## (Intercept)                     -1.447862   0.820898  -1.764  0.07777 . 
+## Mother_Weight                    0.018629   0.006593   2.826  0.00472 **
+## Hypertension_StatusHypertension -1.854477   0.700824  -2.646  0.00814 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 234.67  on 188  degrees of freedom
+## Residual deviance: 221.17  on 186  degrees of freedom
+## AIC: 227.17
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Odds ratio with 95% CI
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Odds_ratio
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+2.5 %
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+97.5 %
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.235
+</td>
+<td style="text-align:right;">
+0.043
+</td>
+<td style="text-align:right;">
+1.102
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mother_Weight
+</td>
+<td style="text-align:right;">
+1.019
+</td>
+<td style="text-align:right;">
+1.006
+</td>
+<td style="text-align:right;">
+1.033
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hypertension_StatusHypertension
+</td>
+<td style="text-align:right;">
+0.157
+</td>
+<td style="text-align:right;">
+0.036
+</td>
+<td style="text-align:right;">
+0.589
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="roc-1" class="section level3">
+<h3>Roc</h3>
+<p>The model AUC=0.675.<br />
+It proves, it does do a good job in predicting Birthweight associated with hypertension and motheres weight at LM. AUC= 0.675 closer to 1 meaning it a good measure of separation. It is good in predicting Birthweight with case or control. It has 67.5% chance that model will be able to distinguish between positive case and negative case. Roc curve is left facing with more on the left upper side. Its an good curve.</p>
+<pre><code>## 
+## Call:
+## roc.default(response = Birthweight$Birthweight_Baby_Type, predictor = weight_hyp$fitted.values)
+## 
+## Data: weight_hyp$fitted.values in 59 controls (Birthweight$Birthweight_Baby_Type Low) &lt; 130 cases (Birthweight$Birthweight_Baby_Type Normal).
+## Area under the curve: 0.676</code></pre>
+<p><img src="birthweight_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+</div>
+<div id="data-visualization" class="section level3">
+<h3>Data visualization</h3>
+<p>It shows there were fewer women with hypertension in the study. And woman with hypertension and weight between 125 and 200 have higher chance of having child with birth weight. <img src="birthweight_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+</div>
+</div>
+<div id="conclusion" class="section level2 tabset">
+<h2>Conclusion</h2>
+<p>It seems like mother’s weight, hypertension and smoking habit does influence bithweight. Low birthweight(&lt;2500) is influenced with having hypertension, smoking habit and mothers weight being lower. As mothers’ weight increases birthweight increses. If a mothere has hypertension then there baby’s weight will be lower compared to non-hypertension woman. If the mother smokes then she does have a higher chance for having low baby birthweight.<br />
+Having a combination of hypertension and heavier mother’s weight does influences low birthweight.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

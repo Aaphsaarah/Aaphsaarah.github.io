@@ -1,0 +1,1779 @@
+---
+title: "Analysis and Prediction of Heart Disease "
+
+
+author: "Aaphsaarah Rahman"
+date: "4/9/2020"
+output:
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+
+## Abstract  {.tabset}
+
+In the United States, cardiovascular diseases are the leading cause of death in adults. It is the first leading cause of death across the world as well. World Health Organization has estimated that the mortality rate caused by heart diseases will mount to 23 million cases by 2030. Hence, the use of data mining algorithms could be useful in predicting coronary artery diseases. Therefore this research aims to predict whether a person is having cardiovascular disease or not based on their medical tests, age, gender in the selected hospital.
+
+## Objective  {.tabset}
+
+The objective of this research is to build classifiers to predict whether a person has cardiovascular disease based on their medical test, age, and gender.
+To identify which test is more reliable in determining cardiovascular disease.
+
+
+## Method   {.tabset}
+     
+Collected patient data from four national hospital. Two from hospital in USA and two from Europe. The data set HD.xlsx includes the patients age, gender, 11 test results, and final diagnosis.   
+
+Firstly, extracted the data from excel. There were 4 data tables. Looked through all there summarized data individually and enquired if there was any missing data. There was none.    
+Secondly categorized all the suitable variables. Then renamed them into suitable meaningful names for better understanding.   
+Thirdly, produced a correlation plot for each 4 hospitals and evaluated there correlation and association with each other.    
+Fourth, produced a table with heart diagnosis, with all 5 types. 0 means no heart disease (HD) and increasing numbers (1-4) are the number of major vessels that are greater than 50% diameter narrowing. For better understanding, dichotomized the severity of HD into 2 categories having “No Heart Disease” and “Present Heart Disease.”    
+  
+Fifth, created a Summary table, which runs t-test and chisq-test for numeric data and categorical data respectively. It summarizes and compares the variables with individuals with heart disease and those who do not have heart disease(dichotomized model). The table is produced for each 4 hospitals and also for combined hospital data as well. The level of significance was 0.05. Any p-value above 0.05 was considered insignificant. 
+   
+Then, created a visual representation of each categorical and numerical variable grouped with/without heart disease using bar plot and histogram.     
+Furthermore, made a generalized linear model and calculated there odds ratio with 95% confidence interval, did the model selection process using backward selection. Then finally come to a conclusive dichotomized model for each hospital and combined as well. Also did a GLM with the severity of heart disease as a response variable with overall combined hospital data.       
+With the GLM build a ROC curve as a graphical presentation for the connection/trade-off between sensitivity and specificity for every possible cut-off for models.    
+ 
+Dataset can be found [here](HD.xlsx). 
+
+
+
+
+
+
+
+
+```{r message=FALSE, warning=FALSE}
+# library
+library(tidyverse)
+library(survival)
+library(survminer)
+library(ggfortify)
+library(kableExtra)
+library(dotwhisker)
+library(data.table)
+library(table1)
+library(knitr)
+library(mlr)
+library(gridExtra)
+library(compareGroups)
+library(readxl)
+library(plyr)
+library(ggplot2)
+library(GGally)
+library(flexsurv)
+library(corrplot)
+library(Hmisc)
+library(ggpubr)
+library(ROCR)
+library(pROC)
+library(nnet)
+
+# function to calling all 4 dataset and the dictionary as well.
+read_excel_allsheets <- function(filename, tibble = FALSE) {
+    # I prefer straight data.frames
+    # but if you like tidyverse tibbles (the default with read_excel)
+    # then just pass tibble = TRUE
+    sheets <- readxl::excel_sheets(filename)
+    x <- lapply(sheets, function(X) readxl::read_excel(filename, sheet = X))
+    if(!tibble) x <- lapply(x, as.data.frame)
+    names(x) <- sheets
+    x
+}
+```
+
+## Exploratory Data Analysis   {.tabset}
+
+There is no missing data in the dataset.
+Summary of each hospital is given below.
+
+
+
+### Data Dictionary	 
+	
+'age'.......Age in years  
+'sex'.......1 = Male; 0 = Female  
+'cp'........Chest pain type   
+............            1 = Typical angina   
+............            2 = Atypical angina                
+............            3 = Non-anginal pain  
+............            4 = Asymptomatic   
+	 
+'trestbps'..Resting blood pressure (in mm Hg on admission to the hospital)   
+	                                                                        
+'fbs'.......(Fasting blood sugar > 120 mg/dl)  (1 = true; 0 = false)           
+	                       
+'restecg'...Resting electrocardiographic results          
+............           	0 = Normal                                                   
+............           	1 = Having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV)        
+............            2= Showing probable or definite left ventricular hypertrophy by Estes' criteria           
+	                                     
+'thalach'...Maximum heart rate achieved              
+	                                                      
+'exang'.....Exercise induced angina (1 = yes; 0 = no)                       
+	                                                             
+'oldpeak'...ST depression induced by exercise relative to rest                            
+	                                               
+'slope'.....Slope of the peak exercise ST segment            
+............   1 = upsloping; 2 = flat; 3 = downsloping                 
+	                                                                 
+'ca'.........Number of major vessels (0-3) colored by flourosopy                
+	                                                                    
+'thal'.......3 = normal; 6 = fixed defect; 7 = reversable defect                 
+	                                                                  
+'diag'......0: No presense of heart disease                                   
+............            1-4: Number of major vessels that  > 50% diameter narrowing  
+	              
+              	              
+### Cost of tests  
+                 
+
+
+Test              Cost      
+cp........Immediate results, no additional cost                
+thestbps..Immediate results, no additional cost             
+fbs.......$5.20, need one day laboratory work              
+restecg...$15.50, need one day laboratory work               
+thalach...$102.90, need one day laboratory work               
+exang.....$87.30, need one day laboratory work            
+oldpeak...$87.30, need one day laboratory work              
+slope.....$87.30, need one day laboratory work                 
+ca........$100.90, need one day laboratory work               
+thal......$102.90, need one day laboratory work 
+  
+### Missing Data
+
+```{r echo=TRUE}
+HD <- read_excel_allsheets("HD.xlsx")
+
+# Check missing data
+# There is no missing data
+
+U1=colSums(is.na(HD$US1))
+U2=colSums(is.na(HD$US2))
+E1=colSums(is.na(HD$EU1))
+E2=colSums(is.na(HD$EU2))
+
+list('U1'=U1,'U2'=U2,'E1'=E1,'E2'=E2) %>% knitr::kable(col.names = "HD", caption =  'Checking for missing data in HD data set') %>%kable_styling(full_width = F, fixed_thead = T)
+```
+
+
+
+### RAW US1
+
+```{r echo=TRUE}
+summarizeColumns(HD$US1) %>% knitr::kable( caption =  'Feature Summary of US1 data before Data Preprocessing')%>%kable_styling(full_width = F, fixed_thead = T)
+```
+
+
+### Raw US2
+
+```{r echo=TRUE}
+summarizeColumns(HD$US2) %>% knitr::kable( caption =  'Feature Summary of US2 data before Data Preprocessing') %>%kable_styling(full_width = F, fixed_thead = T)
+```
+
+### Raw EU1
+ 
+```{r echo=TRUE}
+summarizeColumns(HD$EU1) %>% knitr::kable( caption =  'Feature Summary of EU1 data before Data Preprocessing') %>%kable_styling(full_width = F, fixed_thead = T)
+```
+ 
+### Raw EU2
+ 
+```{r echo=TRUE}
+summarizeColumns(HD$EU2) %>% knitr::kable( caption =  'Feature Summary of EU2 data before Data Preprocessing') %>%kable_styling(full_width = F, fixed_thead = T)
+
+```
+   
+   
+```{r message=TRUE, warning=TRUE}
+#categorizing suitable variable and changed there column names into suitable names for further data analysis.
+
+
+HD$US1$sex= as.factor(HD$US1$sex)
+HD$US1$cp= as.factor(HD$US1$cp)
+HD$US1$fbs= as.factor(HD$US1$fbs)
+HD$US1$restecg= as.factor(HD$US1$restecg)
+HD$US1$exang= as.factor(HD$US1$exang)
+HD$US1$slope= as.factor(HD$US1$slope)
+HD$US1$thal = as.factor(HD$US1$thal)
+HD$US1$diag = as.factor(HD$US1$diag)
+HD$US1$ca = as.factor(HD$US1$ca)
+
+
+HD$US2$sex= as.factor(HD$US2$sex)
+HD$US2$cp= as.factor(HD$US2$cp)
+HD$US2$fbs= as.factor(HD$US2$fbs)
+HD$US2$restecg= as.factor(HD$US2$restecg)
+HD$US2$exang= as.factor(HD$US2$exang)
+HD$US2$slope= as.factor(HD$US2$slope)
+HD$US2$thal = as.factor(HD$US2$thal)
+HD$US2$diag = as.factor(HD$US2$diag)
+HD$US2$ca = as.factor(HD$US2$ca)
+
+
+
+
+HD$EU1$sex= as.factor(HD$EU1$sex)
+HD$EU1$cp= as.factor(HD$EU1$cp)
+HD$EU1$fbs= as.factor(HD$EU1$fbs)
+HD$EU1$restecg= as.factor(HD$EU1$restecg)
+HD$EU1$exang= as.factor(HD$EU1$exang)
+HD$EU1$slope= as.factor(HD$EU1$slope)
+HD$EU1$thal = as.factor(HD$EU1$thal)
+HD$EU1$diag = as.factor(HD$EU1$diag)
+HD$EU1$ca = as.factor(HD$EU1$ca)
+
+
+HD$EU2$sex= as.factor(HD$EU2$sex)
+HD$EU2$cp= as.factor(HD$EU2$cp)
+HD$EU2$fbs= as.factor(HD$EU2$fbs)
+HD$EU2$restecg= as.factor(HD$EU2$restecg)
+HD$EU2$exang= as.factor(HD$EU2$exang)
+HD$EU2$slope= as.factor(HD$EU2$slope)
+HD$EU2$thal = as.factor(HD$EU2$thal)
+HD$EU2$diag = as.factor(HD$EU2$diag)
+HD$EU2$ca = as.factor(HD$EU2$ca)
+
+
+
+# Rename two variable names
+colnames(HD$US1)[colnames(HD$US1)      
+                   %in% c("age", "sex","cp","trestbps","fbs","restecg","thalach","exang", "oldpeak","slope","ca","thal","diag" )] <- c("Age", "Sex","Chest_Pain_Type",
+"Resting_Blood_Pressure","Fasting_Blood_Sugar","Resting_ECG", "Max_Heart_Rate_Achieved", "Exercise_Induced_Angina",
+ "ST_Depression_Exercise","Slope_Peak_Exercise_ST", "Num_Major_Vessels", "Thalassemia", "Diagnosis")
+
+
+colnames(HD$US2)[colnames(HD$US2)      
+                   %in% c("age", "sex","cp","trestbps","fbs","restecg","thalach","exang", "oldpeak","slope","ca","thal","diag" )] <- c("Age", "Sex","Chest_Pain_Type",
+"Resting_Blood_Pressure","Fasting_Blood_Sugar","Resting_ECG", "Max_Heart_Rate_Achieved", "Exercise_Induced_Angina",
+ "ST_Depression_Exercise","Slope_Peak_Exercise_ST", "Num_Major_Vessels", "Thalassemia", "Diagnosis")
+
+
+colnames(HD$EU1)[colnames(HD$EU1)      
+                   %in% c("age", "sex","cp","trestbps","fbs","restecg","thalach","exang", "oldpeak","slope","ca","thal","diag" )] <- c("Age", "Sex","Chest_Pain_Type",
+"Resting_Blood_Pressure","Fasting_Blood_Sugar","Resting_ECG", "Max_Heart_Rate_Achieved", "Exercise_Induced_Angina",
+ "ST_Depression_Exercise","Slope_Peak_Exercise_ST", "Num_Major_Vessels", "Thalassemia", "Diagnosis")
+
+
+colnames(HD$EU2)[colnames(HD$EU2)      
+                   %in% c("age", "sex","cp","trestbps","fbs","restecg","thalach","exang", "oldpeak","slope","ca","thal","diag" )] <- c("Age", "Sex","Chest_Pain_Type",
+"Resting_Blood_Pressure","Fasting_Blood_Sugar","Resting_ECG", "Max_Heart_Rate_Achieved", "Exercise_Induced_Angina",
+ "ST_Depression_Exercise","Slope_Peak_Exercise_ST", "Num_Major_Vessels", "Thalassemia", "Diagnosis")
+
+HD_all<-  rbind(HD$US1,HD$US2,HD$EU1,HD$EU2)
+#head(HD)
+#head(HD$US1)
+
+
+
+```
+
+
+
+## Tables of Diagnosis  {.tabset}
+  
+In diagnosis:-    
+0: No presense of heart disease   
+1-4: Number of major vessels that > 50% diameter narrowing  
+The modified table is the dicotomized version.
+These tables showes the no. of patients with there severity in  heart disease
+  
+### Raw data HD
+ 
+US1 and EU1 has most patients. US1 has most patients with heart disease. EU2 has smallest no. of patients with small amount of patients with heart disease. Lower no. of patients have 4 major vessels  > 50% diameter narrowing. 
+```{r}
+
+a=addmargins(table(US1 = HD$US1$Diagnosis)) 
+
+b=addmargins(table(US2= HD$US2$Diagnosis))
+
+c=addmargins(table(EU1= HD$EU1$Diagnosis))
+
+d=addmargins(table(EU2 = HD$EU2$Diagnosis))
+
+a1= addmargins(table(All = HD_all$Diagnosis))
+
+list(a,b,c,d, a1) %>% kable(caption = 'Frequency of Heart Disease in All Hospital(raw data)')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+```
+
+
+
+### Modified HD
+ 
+This gives us a better visualization of people with and without heart disease in each hospital.  
+Hospital US1, EU1 have higher no. of patients with no heart disease as diagnosis.  
+Hoepital US2, EU2 have higher no. of patients with heart disease as diagnosis comparatively.   
+Overall patients coming to hospital are diagnosed with having heart disease.
+
+```{r}
+#converting heart diagnosis above 0 into 1, as 0 means heart disease absent and above 0 means present.
+# Hospital us2,su2 is in bad position.
+HD$US1$diag_hd =mapvalues(HD$US1$Diagnosis, from = c(0,1,2,3,4), to = c(0,1,1,1,1))
+e=addmargins(table(US1= HD$US1$diag_hd)) 
+
+HD$US2$diag_hd =mapvalues(HD$US2$Diagnosis, from = c(0,1,2,3,4), to = c(0,1,1,1,1))
+f=addmargins(table(US2= HD$US2$diag_hd)) 
+
+HD$EU1$diag_hd =mapvalues(HD$EU1$Diagnosis, from = c(0,1,2,3,4), to = c(0,1,1,1,1))
+g=addmargins(table(EU1= HD$EU1$diag_hd))
+
+    
+HD$EU2$diag_hd =mapvalues(HD$EU2$Diagnosis, from = c(0,1,2,3,4), to = c(0,1,1,1,1))
+h=addmargins(table(EU2= HD$EU2$diag_hd)) 
+
+HD_all$diag_hd =mapvalues(HD_all$Diagnosis, from = c(0,1,2,3,4), to = c(0,1,1,1,1))
+a2= addmargins(table(All= HD_all$diag_hd)) 
+
+list(e,f,g,h, a2) %>% kable(caption = 'Frequency of Heart Disease in All Hospital (binary)')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+
+```
+
+## Corrolation plot  {.tabset}
+ 
+This plots gives the visual representation of corrolation. Higher the magnitude stronger the relation / corrolation.
+
+### US1
+ 
+Corrplot suggest there is a strong association between-          
+Diagnosis -thal   
+Diagnosis -ca   
+Diagnosis -oldpeak    
+slope -oldpeak               
+
+```{r}
+HD1 <- read_excel_allsheets("HD.xlsx")
+
+
+ggcorr(HD1$US1, method = c("everything", "pearson"), nbreaks = 6, label = TRUE) 
+
+```
+
+### US2
+ 
+There is strong correlation between-     
+Diag-thal               
+Diag- ca              
+Diag-oldpeak            
+Diag- exang                
+         
+```{r}
+ggcorr(HD1$US2, method = c("everything", "pearson"), nbreaks = 6,  label = TRUE,  label_color = "white")
+```
+
+### EU1
+
+There is strong correlation between-   
+Diag-thal         
+Diag-ca             
+Diag-oldpeak              
+Diag-exang               
+Oldpeak-exang                
+Exang-cp              
+Thalach-age                    
+ 
+```{r}
+ggcorr(HD1$EU1, method = c("everything", "pearson"), nbreaks = 6,  label = TRUE, label_color = "white")
+```
+
+### EU2    
+Here the corrolation is bit different from other hospitals        
+There is strong correlation only between-      
+Diag-ca       
+Diag-fbs             
+```{r}
+#ggpairs(HD1$EU2, upper = list(continuous = wrap("cor", size=2.5))) + theme_bw()  
+
+ggcorr(HD1$EU2, method = c("everything", "pearson"), nbreaks = 6, label = TRUE, label_size = 3, label_color = "white")
+
+```
+
+### All
+
+Overall Diag with thal, ca, oldpeak are strongly correlated.
+```{r}
+HD1_all<-  rbind(HD1$US1,HD1$US2,HD1$EU1,HD1$EU2)
+
+ggcorr(HD1_all, method = c("everything", "pearson"), nbreaks = 6,  label = TRUE, label_color = "white")
+```
+
+## Summary tables   {.tabset}   
+Carried t-test with numeric variables and chisq test with the categorical variable.    
+Dichotomized the heart diagnosis to present and absent and carried the test. 
+Results show that except in a few hospitals, the majority of them have shown fasting blood sugar, resting ECG are an insignificant test.
+
+Similarity among heart disease patients are:-
+• Most of them were male.  
+• Aged between 49 to 60.  
+• Have asymptomatic chest pain. 
+• The fasting glucose test was irrelevant.
+• Resting ECG test also seemed insignificant.
+• Most of them had exercise-induced angina present (absent in non-HD patients ).  
+• They got 'Flat’ slope in ST-segment exercises but in a few hospitals, it seemed not significant. (have mixed result of non-HD patient)  
+• Most of the patients with HD get 'reversible defect' in the Thalassemia test.  
+• Have high blood pressure around (mean)134 bp. Non-HD have lower bp comparatively.  
+• There mas heart rate achieved on the Thallium stress test is around 127(mean, SD=24.1). It's usually much lower than non-HD patients.
+• They have higher results (mean =1.26) in ST depression exercise compared to non-HD patients. It's usually higher than 1 unit.
+• Colored vessel by fluoroscopy test is significant, if the patient has heart disease then 70% of the time it will be found through this. Only 30%  of heart disease did not have colored vessels in the test.
+
+
+### US1
+
+In US1 hospital patient with heart disease are comparatively older with median age=58, mostly male seems to higher chance in having it, most common chest pain is asymptomatiic (75% common). Most of the time patient tend to have LV hypertrophy 58% or normal  ECG 40% in there resting ECG test as result. Exercise Induced Angina is significant but 'no', 'yes' outcome is similar, 45% and 55% respectively. Cannot predect heart disease through Exercise Induced Angina. In Slope Peak Exercise 65% of them get Flat. 64% of the patiens get reversible defect in Thalassemia test. Mean of Resting_Blood_Pressure is 135 among them. Mean of Max_Heart_Rate_Achieved is 139. Mean of ST depression induced by exercise relative to rest is 1.57.
+        
+And patient with **no heart disease** are younger, have similar distribution in gender, 43% female, 56% male. Most common chesst pain among them is non-aniginal pain. Although atypical and asymptomatic are also seen in them. Patient get normal ECG in there diagnose around 58% of the times. 64% get upsloping in Slope Peak Exercisetest. 79% get normal in Thalassemia test. Mean of Resting_Blood_Pressure is 129 among them. Mean of Max_Heart_Rate_Achieved is 158. Most patients get 0 major vesseled coloured. Mean of ST depression induced by exercise relative to rest is 0.59.
+ 
+Fasting blood sugar is not a significant measure of heart disease, as p-value>0.05.
+If the patient have heart disease the Exercise engina test ie not suitable as its outcome is not differential from non heart patient..
+Here mostly all the test is recomended here except Fasting blood sugar.
+
+```{r}
+table_names<- HD$US1  %>%
+  select(Sex,
+         Chest_Pain_Type,
+         Fasting_Blood_Sugar,
+         Resting_ECG,
+         Exercise_Induced_Angina,
+         Slope_Peak_Exercise_ST,
+         Thalassemia,
+         Age,
+         Resting_Blood_Pressure,
+         Max_Heart_Rate_Achieved,
+         ST_Depression_Exercise,
+         Num_Major_Vessels,
+         diag_hd) %>%
+  mutate(Sex = recode_factor(Sex, `0` = "female", 
+                                  `1` = "male" ),
+         Chest_Pain_Type = recode_factor(Chest_Pain_Type, `1` = "typical angina",   
+                                                          `2` = "atypical angina",
+                                                          `3` = "non-anginal pain", 
+                                                          `4` = "asymptomatic"),
+         Fasting_Blood_Sugar = recode_factor(Fasting_Blood_Sugar, `0` = "<= 120 mg/dl", 
+                                                                  `1` = "> 120 mg/dl"),
+         Resting_ECG = recode_factor(Resting_ECG, `0` = "normal",
+                                                  `1` = "ST-T abnormality",
+                                                  `2` = "LV hypertrophy"),
+         Exercise_Induced_Angina = recode_factor(Exercise_Induced_Angina, `0` = "no",
+                                                                          `1` = "yes"),
+         Slope_Peak_Exercise_ST = recode_factor(Slope_Peak_Exercise_ST, `1` = "up sloping",
+                                                                            `2` = "flat",
+                                                                            `3` = "down sloping"),
+         Thalassemia = recode_factor(Thalassemia, `3` = "normal",
+                                                  `6` = "fixed defect",
+                                                  `7` = "reversible defect") ,
+         diag_hd = ifelse(is.na(diag_hd), NA,
+                        ifelse(diag_hd == 1, "Heart disease",
+                               ifelse(diag_hd == 0, "No Heart disease", "error"))) %>%
+           factor(levels = c("Heart disease", "No Heart disease", "P-value")))
+
+
+rndr <- function(x, name, ...) {
+    if (length(x) == 0) {
+        y <- table_names[[name]]
+        s <- rep("", length(render.default(x=y, name=name, ...)))
+        if (is.numeric(y)) {
+            p <- t.test(y ~ table_names$diag_hd)$p.value
+        } else {
+            p <- chisq.test(table(y, droplevels(table_names$diag_hd)))$p.value
+        }
+        s[2] <- sub("<", "&lt;", format.pval(p, digits=3, eps=0.001))
+        s
+    } else {
+        render.default(x=x, name=name, ...)
+    }
+}
+
+
+rndr.strat <- function(label, n, ...) {
+    ifelse(n==0, label, render.strat.default(label, n, ...))
+}
+table1(~ Age+
+         
+         Sex+
+         Chest_Pain_Type+
+         Fasting_Blood_Sugar+
+         Resting_ECG+
+         Exercise_Induced_Angina+
+         Slope_Peak_Exercise_ST+
+         Thalassemia+
+         Resting_Blood_Pressure+
+         Max_Heart_Rate_Achieved+
+         ST_Depression_Exercise+
+         Num_Major_Vessels|diag_hd, 
+       data = table_names,
+       droplevels = F,
+       render = rndr,
+       render.strat = rndr.strat,
+       overall = F)
+
+
+```
+
+
+### US2
+
+For patients in hospital US2 with **heart diesease** tend to be older having mean of 60 years old, who are mostly male. The most common chest pain among them is asymptomatic 72% of then have it. Exercise induced angina is present among most of them. 71% of then have reversible defect in Thalassemia test. There mean Resting Blood Pressure is 134. Mean of ST depression induced by exercise relative to rest is 1.43.
+
+Test like chest pain, exercise induced angina, Thalassemia, (Oldpeak)= ST depression induced by exercise are fesible to test and predict heart disease.
+
+Here Gender, Fasting Blood Sugar test, Resting ECG, Exercise ST segment, Thalach test(Thallium stress test)  are not significant in this model.
+ 
+```{r}
+
+table_names<- HD$US2 %>%
+  select(Sex,
+         Chest_Pain_Type,
+         Fasting_Blood_Sugar,
+         Resting_ECG,
+         Exercise_Induced_Angina,
+         Slope_Peak_Exercise_ST,
+         Thalassemia,
+         Age,
+         Resting_Blood_Pressure,
+         Max_Heart_Rate_Achieved,
+         ST_Depression_Exercise,
+         Num_Major_Vessels,
+         diag_hd) %>%
+  mutate(Sex = recode_factor(Sex, `0` = "female", 
+                                  `1` = "male" ),
+         Chest_Pain_Type = recode_factor(Chest_Pain_Type, `1` = "typical angina",   
+                                                          `2` = "atypical angina",
+                                                          `3` = "non-anginal pain", 
+                                                          `4` = "asymptomatic"),
+         Fasting_Blood_Sugar = recode_factor(Fasting_Blood_Sugar, `0` = "<= 120 mg/dl", 
+                                                                  `1` = "> 120 mg/dl"),
+         Resting_ECG = recode_factor(Resting_ECG, `0` = "normal",
+                                                  `1` = "ST-T abnormality",
+                                                  `2` = "LV hypertrophy"),
+         Exercise_Induced_Angina = recode_factor(Exercise_Induced_Angina, `0` = "no",
+                                                                          `1` = "yes"),
+         
+         Slope_Peak_Exercise_ST = recode_factor(Slope_Peak_Exercise_ST, `1` = "up sloping",
+                                                                        `2` = "flat",
+                                                                        `3` = "down sloping"),
+         Thalassemia = recode_factor(Thalassemia, `3` = "normal",
+                                                  `6` = "fixed defect",
+                                                  `7` = "reversible defect") ,
+         diag_hd = ifelse(is.na(diag_hd), NA,
+                        ifelse(diag_hd == 1, "Heart disease",
+                               ifelse(diag_hd == 0, "No Heart disease", "error"))) %>%
+           factor(levels = c("Heart disease", "No Heart disease", "P-value")))
+
+
+table1(~ Age+
+         Sex+
+         Chest_Pain_Type+
+         Fasting_Blood_Sugar+
+         Resting_ECG+
+         Exercise_Induced_Angina+
+         Slope_Peak_Exercise_ST+
+         Thalassemia+
+         Resting_Blood_Pressure+
+         Max_Heart_Rate_Achieved+
+         ST_Depression_Exercise+
+         Num_Major_Vessels|diag_hd, 
+       data = table_names,
+       droplevels = F,
+       render = rndr,
+       render.strat = rndr.strat,
+       overall = F)
+```
+
+
+
+
+### EU1
+
+In EU1 hospital middle aged men tend to get heart disease. Popular chest pain in asymptomatic around 78% of them have it. Most of them do not ave diabetes. Have excercise induced angina. In ST segment exsrcise most of them get Flat slope. Have reversible defect in Thalassemia test. Have normal blood pressure. Max_Heart_Rate_Achieved from thallium stress test is 129. Patient with no heart disease have higher value of 145.ST depression induced exercise test gives a mean of 1.25.
+
+Patients withou heart disease get zero magor vessel colored by flourosopy test, have 0.21 in STdepression exercise test. Have higher heart rate in thallium stress test
+ 
+Here only Resting ECG test seems insignificant.
+```{r}
+table_names<- HD$EU1  %>%
+  select(Sex,
+         Chest_Pain_Type,
+         Fasting_Blood_Sugar,
+         Resting_ECG,
+         Exercise_Induced_Angina,
+         Slope_Peak_Exercise_ST,
+         Thalassemia,
+         Age,
+         Resting_Blood_Pressure,
+         Max_Heart_Rate_Achieved,
+         ST_Depression_Exercise,
+         Num_Major_Vessels,
+         diag_hd) %>%
+  mutate(Sex = recode_factor(Sex, `0` = "female", 
+                                  `1` = "male" ),
+         Chest_Pain_Type = recode_factor(Chest_Pain_Type, `1` = "typical angina",   
+                                                          `2` = "atypical angina",
+                                                          `3` = "non-anginal pain", 
+                                                          `4` = "asymptomatic"),
+         Fasting_Blood_Sugar = recode_factor(Fasting_Blood_Sugar, `0` = "<= 120 mg/dl", 
+                                                                  `1` = "> 120 mg/dl"),
+         Resting_ECG = recode_factor(Resting_ECG, `0` = "normal",
+                                                  `1` = "ST-T abnormality",
+                                                  `2` = "LV hypertrophy"),
+         Exercise_Induced_Angina = recode_factor(Exercise_Induced_Angina, `0` = "no",
+                                                                          `1` = "yes"),
+         Slope_Peak_Exercise_ST = recode_factor(Slope_Peak_Exercise_ST, `1` = "up sloping",
+                                                                            `2` = "flat",
+                                                                            `3` = "down sloping"),
+         Thalassemia = recode_factor(Thalassemia, `3` = "normal",
+                                                  `6` = "fixed defect",
+                                                  `7` = "reversible defect") ,
+         diag_hd = ifelse(is.na(diag_hd), NA,
+                        ifelse(diag_hd == 1, "Heart disease",
+                               ifelse(diag_hd == 0, "No Heart disease", "error"))) %>%
+           factor(levels = c("Heart disease", "No Heart disease", "P-value")))
+
+
+table1(~ Age+
+         Sex+
+         Chest_Pain_Type+
+         Fasting_Blood_Sugar+
+         Resting_ECG+
+         Exercise_Induced_Angina+
+         Slope_Peak_Exercise_ST+
+         Thalassemia+
+         Resting_Blood_Pressure+
+         Max_Heart_Rate_Achieved+
+         ST_Depression_Exercise+
+         Num_Major_Vessels|diag_hd, 
+       data = table_names,
+       droplevels = F,
+       render = rndr,
+       render.strat = rndr.strat,
+       overall = F)
+
+
+```
+ 
+### EU2
+
+Here Fasting blood sugar, Resting ECG, Exercise induced angina, St segment slope peak exercise, Thalassemia, Resting Blood pressure measure, Thallium stress test, ST Depression Exercise all these test seems insignificant here.
+
+Only few test like chest pain, Number of major vessels (0-3) colored by flourosopy are signiifcant.
+```{r}
+table_names<- HD$EU2  %>%
+  select(Sex,
+         Chest_Pain_Type,
+         Fasting_Blood_Sugar,
+         Resting_ECG,
+         Exercise_Induced_Angina,
+         Slope_Peak_Exercise_ST,
+         Thalassemia,
+         Age,
+         Resting_Blood_Pressure,
+         Max_Heart_Rate_Achieved,
+         ST_Depression_Exercise,
+         Num_Major_Vessels,
+         diag_hd) %>%
+  mutate(Sex = recode_factor(Sex, `0` = "female", 
+                                  `1` = "male" ),
+         Chest_Pain_Type = recode_factor(Chest_Pain_Type, `1` = "typical angina",   
+                                                          `2` = "atypical angina",
+                                                          `3` = "non-anginal pain", 
+                                                          `4` = "asymptomatic"),
+         Fasting_Blood_Sugar = recode_factor(Fasting_Blood_Sugar, `0` = "<= 120 mg/dl", 
+                                                                  `1` = "> 120 mg/dl"),
+         Resting_ECG = recode_factor(Resting_ECG, `0` = "normal",
+                                                  `1` = "ST-T abnormality",
+                                                  `2` = "LV hypertrophy"),
+         Exercise_Induced_Angina = recode_factor(Exercise_Induced_Angina, `0` = "no",
+                                                                          `1` = "yes"),
+         Slope_Peak_Exercise_ST = recode_factor(Slope_Peak_Exercise_ST, `1` = "up sloping",
+                                                                            `2` = "flat",
+                                                                            `3` = "down sloping"),
+         Thalassemia = recode_factor(Thalassemia, `3` = "normal",
+                                                  `6` = "fixed defect",
+                                                  `7` = "reversible defect") ,
+         diag_hd = ifelse(is.na(diag_hd), NA,
+                        ifelse(diag_hd == 1, "Heart disease",
+                               ifelse(diag_hd == 0, "No Heart disease", "error"))) %>%
+           factor(levels = c("Heart disease", "No Heart disease", "P-value")))
+
+
+table1(~ Age+
+         Sex+
+         Chest_Pain_Type+
+         Fasting_Blood_Sugar+
+         Resting_ECG+
+         Exercise_Induced_Angina+
+         Slope_Peak_Exercise_ST+
+         Thalassemia+
+         Resting_Blood_Pressure+
+         Max_Heart_Rate_Achieved+
+         ST_Depression_Exercise+
+         Num_Major_Vessels|diag_hd, 
+       data = table_names,
+       droplevels = F,
+       render = rndr,
+       render.strat = rndr.strat,
+       overall = F)
+
+
+
+
+```
+
+
+### All
+
+Overall all the test seems significant.
+```{r}
+table_names<- HD_all  %>%
+  select(Sex,
+         Chest_Pain_Type,
+         Fasting_Blood_Sugar,
+         Resting_ECG,
+         Exercise_Induced_Angina,
+         Slope_Peak_Exercise_ST,
+         Thalassemia,
+         Age,
+         Resting_Blood_Pressure,
+         Max_Heart_Rate_Achieved,
+         ST_Depression_Exercise,
+         Num_Major_Vessels,
+         diag_hd) %>%
+  mutate(Sex = recode_factor(Sex, `0` = "female", 
+                                  `1` = "male" ),
+         Chest_Pain_Type = recode_factor(Chest_Pain_Type, `1` = "typical angina",   
+                                                          `2` = "atypical angina",
+                                                          `3` = "non-anginal pain", 
+                                                          `4` = "asymptomatic"),
+         Fasting_Blood_Sugar = recode_factor(Fasting_Blood_Sugar, `0` = "<= 120 mg/dl", 
+                                                                  `1` = "> 120 mg/dl"),
+         Resting_ECG = recode_factor(Resting_ECG, `0` = "normal",
+                                                  `1` = "ST-T abnormality",
+                                                  `2` = "LV hypertrophy"),
+         Exercise_Induced_Angina = recode_factor(Exercise_Induced_Angina, `0` = "no",
+                                                                          `1` = "yes"),
+         Slope_Peak_Exercise_ST = recode_factor(Slope_Peak_Exercise_ST, `1` = "up sloping",
+                                                                            `2` = "flat",
+                                                                            `3` = "down sloping"),
+         Thalassemia = recode_factor(Thalassemia, `3` = "normal",
+                                                  `6` = "fixed defect",
+                                                  `7` = "reversible defect") ,
+         diag_hd = ifelse(is.na(diag_hd), NA,
+                        ifelse(diag_hd == 1, "Heart disease",
+                               ifelse(diag_hd == 0, "No Heart disease", "error"))) %>%
+           factor(levels = c("Heart disease", "No Heart disease", "P-value")))
+
+
+table1(~ Age+
+         Sex+
+         Chest_Pain_Type+
+         Fasting_Blood_Sugar+
+         Resting_ECG+
+         Exercise_Induced_Angina+
+         Slope_Peak_Exercise_ST+
+         Thalassemia+
+         Resting_Blood_Pressure+
+         Max_Heart_Rate_Achieved+
+         ST_Depression_Exercise+
+         Num_Major_Vessels|diag_hd, 
+       data = table_names,
+       droplevels = F,
+       render = rndr,
+       render.strat = rndr.strat,
+       overall = F)
+```
+
+
+
+
+
+
+
+   
+## Data visualisation of each hospital  {.tabset}
+
+Mostly all heart disease patient have as asymptomatic chest pain. 
+Most patient have HD have ecercise induced angina.
+Most people with HD have flat response in ST segment exercise.
+ECG is normal in most HD patients.
+
+### US1
+
+ 
+```{r}
+# graphicar representation of there association.
+
+
+hd_long_fact_tbl <- HD$US1  %>%
+  select(Sex,
+         Chest_Pain_Type,
+         Fasting_Blood_Sugar ,
+         Resting_ECG,
+         Exercise_Induced_Angina,
+         Slope_Peak_Exercise_ST,
+         Thalassemia,Num_Major_Vessels,
+         diag_hd) %>%
+  mutate(  Sex = recode_factor(Sex, `0` = "female", 
+                                  `1` = "male" ),
+         Chest_Pain_Type = recode_factor(Chest_Pain_Type, `1` = "typical",   
+                                                          `2` = "atypical",
+                                                          `3` = "non-anginal", 
+                                                          `4` = "asymptomatic"),
+         Fasting_Blood_Sugar = recode_factor(Fasting_Blood_Sugar, `0` = "<= 120 mg/dl", 
+                                                                  `1` = "> 120 mg/dl"),
+         Resting_ECG = recode_factor(Resting_ECG, `0` = "normal",
+                                                  `1` = "ST-T abnormality",
+                                                  `2` = "LV hypertrophy"),
+         Exercise_Induced_Angina = recode_factor(Exercise_Induced_Angina, `0` = "no",
+                                                                          `1` = "yes"),
+         Slope_Peak_Exercise_ST = recode_factor(Slope_Peak_Exercise_ST, `1` = "up sloping",
+                                                                            `2` = "flat",
+                                                                            `3` = "down sloping"),
+         Thalassemia = recode_factor(Thalassemia, `3` = "normal",
+                                                  `6` = "fixed defect",
+                                                  `7` = "reversible defect")) %>%
+
+  gather(key = "key", value = "value", -diag_hd)
+
+#Visualize with bar plot
+hd_long_fact_tbl %>% 
+  ggplot(aes(value)) +
+    geom_bar(aes(x        = value, 
+                 fill     = diag_hd), 
+                 alpha    = .6, 
+                 position = "dodge", 
+                 color    = "black",
+                 width    = .8
+             ) +
+    labs(x = "",
+         y = "",
+         title = "Scaled Effect of Categorical Variables") +
+    theme(
+         axis.text.y  = element_blank(),
+         axis.ticks.y = element_blank()) +
+    facet_wrap(~ key, scales = "free", nrow = 5) +
+    scale_fill_manual(
+         values = c("yellow2", "firebrick1"),
+         name   = "Heart\nDisease",
+         labels = c("No HD", "Yes HD"))
+
+hd_long_cont_tbl <- HD$US1  %>%
+  select(Age,
+         Resting_Blood_Pressure,
+         Max_Heart_Rate_Achieved,
+         ST_Depression_Exercise,
+         #Num_Major_Vessels,
+         diag_hd) %>% 
+  gather(key   = "key", 
+         value = "value",
+         -diag_hd)
+
+#Visualize numeric variables as boxplots
+h<-hd_long_cont_tbl %>% 
+  ggplot(aes(y = value)) +
+       geom_histogram(aes(fill = diag_hd),
+                      alpha  = .6) +
+        labs(x = "",
+             y = "",
+             title = "Boxplots for Numeric Variables") +
+      scale_fill_manual(
+            values = c("yellow2", "springgreen3"),
+            name   = "Heart\nDisease",
+            labels = c("No HD", "Yes HD")) +
+      theme() +
+      facet_wrap( ~ key  , 
+                scales = "free", 
+                 ncol   = 2) 
+
+h +coord_flip()
+
+```
+ DGGRGWRGWGWRGV
+  GRWGRWG
+
+
+### US2
+ 
+```{r}
+# graphicar representation of there association.
+# graphicar representation of there association.
+hd_long_fact_tbl <- HD$US2  %>%
+  select(Sex,
+         Chest_Pain_Type,
+         Fasting_Blood_Sugar,
+         Resting_ECG,
+         Exercise_Induced_Angina,
+         Slope_Peak_Exercise_ST,
+         Thalassemia,
+         Num_Major_Vessels,
+         diag_hd)  %>%
+
+  mutate(Sex = recode_factor(Sex, `0` = "female", 
+                                  `1` = "male" ),
+         Chest_Pain_Type = recode_factor(Chest_Pain_Type, `1` = "typical ",   
+                                                          `2` = "atypical ",
+                                                          `3` = "non-anginal ", 
+                                                          `4` = "asymptomatic"),
+         Fasting_Blood_Sugar = recode_factor(Fasting_Blood_Sugar, `0` = "<= 120 mg/dl", 
+                                                                  `1` = "> 120 mg/dl"),
+         Resting_ECG = recode_factor(Resting_ECG, `0` = "normal",
+                                                  `1` = "ST-T abnormality",
+                                                  `2` = "LV hypertrophy"),
+         Exercise_Induced_Angina = recode_factor(Exercise_Induced_Angina, `0` = "no",
+                                                                          `1` = "yes"),
+         Slope_Peak_Exercise_ST= recode_factor(Slope_Peak_Exercise_ST, `1` = "up sloping",
+                                                                            `2` = "flat",
+                                                                            `3` = "down sloping"),
+         Thalassemia = recode_factor(Thalassemia, `3` = "normal",
+                                                  `6` = "fixed defect",
+                                                  `7` = "reversible defect")) %>%
+  gather(key = "key", value = "value", -diag_hd)
+
+#Visualize with bar plot
+hd_long_fact_tbl %>% 
+  ggplot(aes(value)) +
+    geom_bar(aes(x        = value, 
+                 fill     = diag_hd), 
+                 alpha    = .6, 
+                 position = "dodge", 
+                 color    = "black",
+                 width    = .8
+             ) +
+    labs(x = "",
+         y = "",
+         title = "Scaled Effect of Categorical Variables") +
+    theme(
+         axis.text.y  = element_blank(),
+         axis.ticks.y = element_blank()) +
+    facet_wrap(~ key, scales = "free", nrow = 4) +
+    scale_fill_manual(
+         values = c("yellow2", "firebrick1"),
+         name   = "Heart\nDisease",
+         labels = c("No HD", "Yes HD"))
+
+hd_long_cont_tbl <- HD$US2  %>%
+  select(Age,
+         Resting_Blood_Pressure,
+         Max_Heart_Rate_Achieved,
+         ST_Depression_Exercise,
+        # Num_Major_Vessels,
+         diag_hd) %>% 
+  gather(key   = "key", 
+         value = "value",
+         -diag_hd)
+
+#Visualize numeric variables as boxplots
+h<-hd_long_cont_tbl %>% 
+  ggplot(aes(y = value)) +
+       geom_histogram(aes(fill = diag_hd),
+                      alpha  = .6) +
+        labs(x = "",
+             y = "",
+             title = "Boxplots for Numeric Variables") +
+      scale_fill_manual(
+            values = c("yellow2", "springgreen3"),
+            name   = "Heart\nDisease",
+            labels = c("No HD", "Yes HD")) +
+      theme() +
+      facet_wrap( ~ key  , 
+                scales = "free", 
+                 ncol   = 2) 
+
+h +coord_flip()
+```
+
+
+
+### EU1
+ 
+```{r}
+# graphicar representation of there association.
+# graphicar representation of there association.
+hd_long_fact_tbl <- HD$EU1  %>%
+  select(Sex,
+         Chest_Pain_Type,
+         Fasting_Blood_Sugar,
+         Resting_ECG,
+         Exercise_Induced_Angina,
+         Slope_Peak_Exercise_ST,
+         Thalassemia,
+         Num_Major_Vessels,
+         diag_hd) %>%
+  #rename(Resting_ECG...x=Resting_ECG)%>%
+  mutate(Sex = recode_factor(Sex, `0` = "female", 
+                                  `1` = "male" ),
+         Chest_Pain_Type = recode_factor(Chest_Pain_Type, `1` = "typical ",   
+                                                          `2` = "atypical ",
+                                                          `3` = "non-anginal ", 
+                                                          `4` = "asymptomatic"),
+         Fasting_Blood_Sugar = recode_factor(Fasting_Blood_Sugar, `0` = "<= 120 mg/dl", 
+                                                                  `1` = "> 120 mg/dl"),
+         Resting_ECG = recode_factor(Resting_ECG, `0` = "normal",
+                                                  `1` = "ST-T abnormality",
+                                                  `2` = "LV hypertrophy"),
+         Exercise_Induced_Angina = recode_factor(Exercise_Induced_Angina, `0` = "no",
+                                                                          `1` = "yes"),
+         Slope_Peak_Exercise_ST = recode_factor(Slope_Peak_Exercise_ST, `1` = "up sloping",
+                                                                            `2` = "flat",
+                                                                            `3` = "down sloping"),
+         Thalassemia = recode_factor(Thalassemia, `3` = "normal",
+                                                  `6` = "fixed defect",
+                                                  `7` = "reversible defect")) %>%
+  gather(key = "key", value = "value", -diag_hd)
+
+#Visualize with bar plot
+hd_long_fact_tbl %>% 
+  ggplot(aes(value)) +
+    geom_bar(aes(x        = value, 
+                 fill     = diag_hd), 
+                 alpha    = .6, 
+                 position = "dodge", 
+                 color    = "black",
+                 width    = .8
+             ) +
+    labs(x = "",
+         y = "",
+         title = "Scaled Effect of Categorical Variables") +
+    theme(
+         axis.text.y  = element_blank(),
+         axis.ticks.y = element_blank()) +
+    facet_wrap(~ key, scales = "free", nrow = 4) +
+    scale_fill_manual(
+         values = c("yellow2", "firebrick1"),
+         name   = "Heart\nDisease",
+         labels = c("No HD", "Yes HD"))
+
+hd_long_cont_tbl <- HD$EU1  %>%
+  select(Age,
+         Resting_Blood_Pressure,
+         Max_Heart_Rate_Achieved,
+         ST_Depression_Exercise,
+        # Num_Major_Vessels,
+         diag_hd) %>% 
+  gather(key   = "key", 
+         value = "value",
+         -diag_hd)
+
+#Visualize numeric variables as boxplots
+h<-hd_long_cont_tbl %>% 
+  ggplot(aes(y = value)) +
+       geom_histogram(aes(fill = diag_hd),
+                      alpha  = .6) +
+        labs(x = "",
+             y = "",
+             title = "Boxplots for Numeric Variables") +
+      scale_fill_manual(
+            values = c("yellow2", "springgreen3"),
+            name   = "Heart\nDisease",
+            labels = c("No HD", "Yes HD")) +
+      theme() +
+      facet_wrap( ~ key  , 
+                scales = "free", 
+                 ncol   = 2) 
+
+h +coord_flip()
+
+```
+
+### EU2
+```{r}
+# graphicar representation of there association.
+hd_long_fact_tbl <- HD$EU2  %>%
+  select(Sex,
+         Chest_Pain_Type,
+         Fasting_Blood_Sugar,
+         Resting_ECG,
+         Exercise_Induced_Angina,
+         Slope_Peak_Exercise_ST,
+         Thalassemia,
+         Num_Major_Vessels,
+         diag_hd) %>%
+  #rename(Fasting_Blood_Sugar...x=Fasting_Blood_Sugar, Resting_ECG...x=Resting_ECG ,Exercise_Induced_Angina...x=Exercise_Induced_Angina , Slope_Peak_Exercise_ST...x=Slope_Peak_Exercise_ST, Thalassemia...x=Thalassemia )%>%
+  mutate(Sex = recode_factor(Sex, `0` = "female", 
+                                  `1` = "male" ),
+         Chest_Pain_Type = recode_factor(Chest_Pain_Type, `1` = "typical ",   
+                                                          `2` = "atypical ",
+                                                          `3` = "non-anginal", 
+                                                          `4` = "asymptomatic"),
+         Fasting_Blood_Sugar = recode_factor(Fasting_Blood_Sugar, `0` = "<= 120 mg/dl", 
+                                                                  `1` = "> 120 mg/dl"),
+         Resting_ECG = recode_factor(Resting_ECG, `0` = "normal",
+                                                  `1` = "ST-T abnormality",
+                                                  `2` = "LV hypertrophy"),
+         Exercise_Induced_Angina = recode_factor(Exercise_Induced_Angina, `0` = "no",
+                                                                          `1` = "yes"),
+         Slope_Peak_Exercise_ST = recode_factor(Slope_Peak_Exercise_ST, `1` = "up sloping",
+                                                                            `2` = "flat",
+                                                                            `3` = "down sloping"),
+         Thalassemia = recode_factor(Thalassemia, `3` = "normal",
+                                                  `6` = "fixed defect",
+                                                  `7` = "reversible defect")) %>%
+  gather(key = "key", value = "value", -diag_hd)
+
+#Visualize with bar plot
+hd_long_fact_tbl %>% 
+  ggplot(aes(value)) +
+    geom_bar(aes(x        = value, 
+                 fill     = diag_hd), 
+                 alpha    = .6, 
+                 position = "dodge", 
+                 color    = "black",
+                 width    = .8
+             ) +
+    labs(x = "",
+         y = "",
+         title = "Scaled Effect of Categorical Variables") +
+    theme(
+         axis.text.y  = element_blank(),
+         axis.ticks.y = element_blank()) +
+    facet_wrap(~ key, scales = "free", nrow = 4) +
+    scale_fill_manual(
+         values = c("yellow2", "firebrick1"),
+         name   = "Heart\nDisease",
+         labels = c("No HD", "Yes HD"))
+
+hd_long_cont_tbl <- HD$EU2  %>%
+  select(Age,
+         Resting_Blood_Pressure,
+         Max_Heart_Rate_Achieved,
+         ST_Depression_Exercise,
+         #Num_Major_Vessels,
+         diag_hd) %>% 
+ # rename(Resting_Blood_Pressure...x= Resting_Blood_Pressure,
+   #      Max_Heart_Rate_Achieved...x= Max_Heart_Rate_Achieved,
+     #    ST_Depression_Exercise...x=ST_Depression_Exercise)%>%
+  gather(key   = "key", 
+         value = "value",
+         -diag_hd)
+
+#Visualize numeric variables as boxplots
+h<-hd_long_cont_tbl %>% 
+  ggplot(aes(y = value)) +
+       geom_histogram(aes(fill = diag_hd),
+                      alpha  = .6) +
+        labs(x = "",
+             y = "",
+             title = "Boxplots for Numeric Variables") +
+      scale_fill_manual(
+            values = c("yellow2", "springgreen3"),
+            name   = "Heart\nDisease",
+            labels = c("No HD", "Yes HD")) +
+      theme() +
+      facet_wrap( ~ key  , 
+                scales = "free", 
+                 ncol   = 2) 
+
+h +coord_flip()
+
+```
+
+### All dichotomized
+
+```{r}
+# graphicar representation of there association.
+hd_long_fact_tbl <- HD_all  %>%
+  select(Sex,
+         Chest_Pain_Type,
+         Fasting_Blood_Sugar,
+         Resting_ECG,
+         Exercise_Induced_Angina,
+         Slope_Peak_Exercise_ST,
+         Thalassemia,
+         Num_Major_Vessels,
+         diag_hd) %>%
+  mutate(Sex = recode_factor(Sex, `0` = "female", 
+                                  `1` = "male" ),
+         Chest_Pain_Type = recode_factor(Chest_Pain_Type, `1` = "typical",   
+                                                          `2` = "atypical ",
+                                                          `3` = "non-anginal", 
+                                                          `4` = "asymptomatic"),
+         Fasting_Blood_Sugar = recode_factor(Fasting_Blood_Sugar, `0` = "<= 120 mg/dl", 
+                                                                  `1` = "> 120 mg/dl"),
+         Resting_ECG = recode_factor(Resting_ECG, `0` = "normal",
+                                                  `1` = "ST-T abnormality",
+                                                  `2` = "LV hypertrophy"),
+         Exercise_Induced_Angina = recode_factor(Exercise_Induced_Angina, `0` = "no",
+                                                                          `1` = "yes"),
+         Slope_Peak_Exercise_ST = recode_factor(Slope_Peak_Exercise_ST, `1` = "up sloping",
+                                                                            `2` = "flat",
+                                                                            `3` = "down sloping"),
+         Thalassemia = recode_factor(Thalassemia, `3` = "normal",
+                                                  `6` = "fixed defect",
+                                                  `7` = "reversible defect")) %>%
+  gather(key = "key", value = "value", -diag_hd)
+
+#Visualize with bar plot
+hd_long_fact_tbl %>% 
+  ggplot(aes(value)) +
+    geom_bar(aes(x        = value, 
+                 fill     = diag_hd), 
+                 alpha    = .6, 
+                 position = "dodge", 
+                 color    = "black",
+                 width    = .8
+             ) +
+    labs(x = "",
+         y = "",
+         title = "Scaled Effect of Categorical Variables") +
+    theme(
+         axis.text.y  = element_blank(),
+         axis.ticks.y = element_blank()) +
+    facet_wrap(~ key, scales = "free", nrow = 4) +
+    scale_fill_manual(
+         values = c("yellow2", "firebrick1"),
+         name   = "Heart\nDisease",
+         labels = c("No HD", "Yes HD"))
+
+hd_long_cont_tbl <- HD_all  %>%
+  select(Age,
+         Resting_Blood_Pressure,
+         Max_Heart_Rate_Achieved,
+         ST_Depression_Exercise,
+         #Num_Major_Vessels,
+         diag_hd) %>% 
+  gather(key   = "key",  value = "value",  -diag_hd)
+
+#Visualize numeric variables as boxplots
+h<-hd_long_cont_tbl %>% 
+  ggplot(aes(y = value)) +
+       geom_histogram(aes(fill = diag_hd),
+                      alpha  = .6) +
+        labs(x = "",
+             y = "",
+             title = "Boxplots for Numeric Variables") +
+      scale_fill_manual(
+            values = c("yellow2", "springgreen3"),
+            name   = "Heart\nDisease",
+            labels = c("No HD", "Yes HD")) +
+      theme() +
+      facet_wrap( ~ key  , 
+                scales = "free", 
+                 ncol   = 2) 
+
+h +coord_flip()
+```
+
+### All not dichotomized
+```{r}
+# graphicar representation of there association.
+hd_long_fact_tbl <- HD_all  %>%
+  select(Sex,
+         Chest_Pain_Type,
+         Fasting_Blood_Sugar,
+         Resting_ECG,
+         Exercise_Induced_Angina,
+         Slope_Peak_Exercise_ST,
+         Thalassemia,
+         Num_Major_Vessels,
+         Diagnosis) %>%
+  mutate(Sex = recode_factor(Sex, `0` = "female", 
+                                  `1` = "male" ),
+         Chest_Pain_Type = recode_factor(Chest_Pain_Type, `1` = "typical",   
+                                                          `2` = "atypical ",
+                                                          `3` = "non-anginal", 
+                                                          `4` = "asymptomatic"),
+         Fasting_Blood_Sugar = recode_factor(Fasting_Blood_Sugar, `0` = "<= 120 mg/dl", 
+                                                                  `1` = "> 120 mg/dl"),
+         Resting_ECG = recode_factor(Resting_ECG, `0` = "normal",
+                                                  `1` = "ST-T abnormality",
+                                                  `2` = "LV hypertrophy"),
+         Exercise_Induced_Angina = recode_factor(Exercise_Induced_Angina, `0` = "no",
+                                                                          `1` = "yes"),
+         Slope_Peak_Exercise_ST = recode_factor(Slope_Peak_Exercise_ST, `1` = "up sloping",
+                                                                            `2` = "flat",
+                                                                            `3` = "down sloping"),
+         Thalassemia = recode_factor(Thalassemia, `3` = "normal",
+                                                  `6` = "fixed defect",
+                                                  `7` = "reversible defect")) %>%
+  gather(key = "key", value = "value", -Diagnosis )
+
+#Visualize with bar plot
+hd_long_fact_tbl %>% 
+  ggplot(aes(value)) +
+    geom_bar(aes(x        = value, 
+                 fill     = Diagnosis), 
+                 alpha    = .6, 
+                 position = "dodge", 
+                 color    = "black",
+                 width    = .8
+             ) +
+    labs(x = "",
+         y = "",
+         title = "Scaled Effect of Categorical Variables") +
+    theme(
+         axis.text.y  = element_blank(),
+         axis.ticks.y = element_blank()) +
+    facet_wrap(~ key, scales = "free", nrow = 4) +
+    scale_fill_manual(
+         values = c("yellow2", "firebrick1", "firebrick2", "firebrick3","firebrick4"),
+         name   = "Heart\nDisease",
+         labels = c("No HD", "1-HD","2-HD","3-HD","4-HD"))
+
+hd_long_cont_tbl <- HD_all  %>%
+  select(Age,
+         Resting_Blood_Pressure,
+         Max_Heart_Rate_Achieved,
+         ST_Depression_Exercise,
+         #Num_Major_Vessels,
+         Diagnosis) %>% 
+  gather(key   = "key",  value = "value",  -Diagnosis)
+
+#Visualize numeric variables as boxplots
+h<-hd_long_cont_tbl %>% 
+  ggplot(aes(y = value)) +
+       geom_histogram(aes(fill = Diagnosis),
+                      alpha  = .6) +
+        labs(x = "",
+             y = "",
+             title = "Boxplots for Numeric Variables") +
+      scale_fill_manual(
+            values = c("yellow2", "springgreen1", "springgreen2", "springgreen3", "seagreen"),
+            name   = "Heart\nDisease",
+            labels = c("No HD", "1-HD","2-HD","3-HD","4-HD")) +
+      theme() +
+      facet_wrap( ~ key  , 
+                scales = "free", 
+                 ncol   = 2) 
+
+h +coord_flip()
+```
+
+   
+## Initial Generalized Regression Models {.tabset}
+
+
+### US1 
+
+Signiﬁcant predictors are -**[Male, Chest_Pain_Type4=asymptomatic, Resting_Blood_Pressure, Slope_Peak_Exercise_ST2 = flat,Num_Major_Vessels= 1,2,3 , Thalassemia7='reversible defect ']** for having p-value <0.05, nd for not having 1.0 inside confidence interval. And there odds ratio is closer to higher than 1.0. There are in favour of having heart disease.  
+So being a male, and having asymptomatic- chest pain, having high blood pressure, having flat slope in ST segment excercise test, have colured major blood vessel by flourosopy  and having result -reversible defect in Thalassemia test **favoures in having heart disease**.
+```{r}
+HD$US1$diag_hd = relevel(factor(HD$US1$diag_hd), ref = 1) #likelihood of having hd as reference 
+
+lm_US1<- glm(diag_hd~ . -Diagnosis  , data=HD$US1, family = binomial(link = "logit"))
+summary(lm_US1)
+
+round(exp(cbind(Odds_ratio = coef(lm_US1), confint(lm_US1,level = 0.95))), 3)%>% 
+  
+  kable(caption = 'Odds ratio in US1 hospital (dicotomized)')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+
+HD$US1$Age_a = NULL
+HD$US1$Age_a [HD$US1$Age <45] = "mid_40s"
+HD$US1$Age_a [HD$US1$Age >=45 & HD$US1$Age <= 59] = "late _40-50"
+HD$US1$Age_a [HD$US1$Age > 59] = "elderly"
+HD$US1$Age_a = factor(HD$US1$Age_a)
+HD$US1$Age_a  = relevel(factor(HD$US1$Age_a), ref = "mid_40s")
+
+table(HD$US1$Age_a )
+
+lm2_US1<- glm(diag_hd~ . -Diagnosis -Age  , data=HD$US1, family = binomial(link = "logit"))
+summary(lm2_US1)
+
+fit_backward = step(lm2_US1, direction = "backward")
+
+```
+
+
+
+### US2
+
+Age,Num_Major_Vessels1 ,Num_Major_Vessels3 ,  Thalassemia7  are significant.
+```{r}
+
+HD$US2$diag_hd = relevel(factor(HD$US2$diag_hd), ref = 1) #likelihood of having hd as reference 
+
+lm_US2<- glm(diag_hd~ . -Diagnosis , data=HD$US2, family = binomial(link = "logit"))
+summary(lm_US2)
+round(exp(cbind(Odds_ratio = coef(lm_US2), confint(lm_US2,level = 0.95))), 3)
+
+HD$US2$Age_a = NULL
+HD$US2$Age_a [HD$US2$Age <45] = "mid_40s"
+HD$US2$Age_a [HD$US2$Age >=45 & HD$US2$Age <= 59] = "late _40-50"
+HD$US2$Age_a [HD$US2$Age > 59] = "elderly"
+HD$US2$Age_a = factor(HD$US2$Age_a)
+HD$US2$Age_a  = relevel(factor(HD$US2$Age_a), ref = "mid_40s")
+
+table(HD$US2$Age_a )
+
+lm2_US2<- glm(diag_hd~ . -Diagnosis -Age  , data=HD$US2, family = binomial(link = "logit"))
+summary(lm2_US2)
+
+fit_backward = step(lm2_US2, direction = "backward")
+```
+
+
+
+
+### EU1
+```{r}
+HD$EU1$diag_hd = relevel(factor(HD$EU1$diag_hd), ref = 1) #likelihood of having hd as reference 
+
+lm_EU1<- glm(diag_hd~ . -Diagnosis , data=HD$EU1, family = binomial(link = "logit"))
+summary(lm_EU1)
+round(exp(cbind(Odds_ratio = coef(lm_EU1), confint(lm_EU1,level = 0.95))), 3)
+
+
+HD$EU1$Age_a = NULL
+HD$EU1$Age_a [HD$EU1$Age <45] = "mid_40s"
+HD$EU1$Age_a [HD$EU1$Age >=45 & HD$EU1$Age <= 59] = "late _40-50"
+HD$EU1$Age_a [HD$EU1$Age > 59] = "elderly"
+HD$EU1$Age_a = factor(HD$EU1$Age_a)
+HD$EU1$Age_a  = relevel(factor(HD$EU1$Age_a), ref = "mid_40s")
+
+table(HD$EU1$Age_a )
+
+lm2_EU1<- glm(diag_hd~ . -Diagnosis -Age  , data=HD$EU1, family = binomial(link = "logit"))
+summary(lm2_EU1)
+
+fit_backward = step(lm2_EU1, direction = "backward")
+```
+
+
+
+### EU2
+```{r}
+HD$EU2$diag_hd = relevel(factor(HD$EU2$diag_hd), ref = 1) #likelihood of having hd as reference 
+
+lm_EU2<- glm(diag_hd~ . -Diagnosis , data=HD$EU2, family = binomial(link = "logit"))
+summary(lm_EU2)
+round(exp(cbind(Odds_ratio = coef(lm_EU1), confint(lm_EU2,level = 0.95))), 3)
+
+
+
+HD$EU2$Age_a = NULL
+HD$EU2$Age_a [HD$EU2$Age <45] = "mid_40s"
+HD$EU2$Age_a [HD$EU2$Age >=45 & HD$EU2$Age <= 59] = "late _40-50"
+HD$EU2$Age_a [HD$EU2$Age > 59] = "elderly"
+HD$EU2$Age_a = factor(HD$EU2$Age_a)
+HD$EU2$Age_a  = relevel(factor(HD$EU2$Age_a), ref = "mid_40s")
+
+table(HD$EU2$Age_a )
+
+lm2_EU2<- glm(diag_hd~ . -Diagnosis -Age  , data=HD$EU2, family = binomial(link = "logit"))
+summary(lm2_EU2)
+
+fit_backward = step(lm2_EU2, direction = "backward")
+```
+
+
+### All, dichotomized
+```{r}
+HD_all$diag_hd = relevel(factor(HD_all$diag_hd), ref = 1) #likelihood of having hd as reference 
+
+lm_all<- glm(diag_hd~ . -Diagnosis , data=HD_all, family = binomial(link = "logit"))
+summary(lm_all) 
+round(exp(cbind(Odds_ratio = coef(lm_all), confint(lm_all,level = 0.95))), 3) %>% 
+  kable(caption = 'Odds ratio of varameter in All hospital (dicotomized)')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+
+
+
+HD_all$Age_a = NULL
+HD_all$Age_a [HD_all$Age <45] = "mid_40s"
+HD_all$Age_a [HD_all$Age >=45 & HD_all$Age <= 59] = "late _40-50"
+HD_all$Age_a [HD_all$Age > 59] = "elderly"
+HD_all$Age_a = factor(HD_all$Age_a)
+HD_all$Age_a  = relevel(factor(HD_all$Age_a), ref = "mid_40s")
+
+table(HD_all$Age_a )
+
+lm_all_2<- glm(diag_hd~ . -Diagnosis -Age  , data=HD_all, family = binomial(link = "logit"))
+summary(lm_all_2)
+
+fit_backward = step(lm_all_2, direction = "backward")
+```
+
+
+### All not dichotomized
+```{r}
+lm_all_d<- glm(Diagnosis~ . -diag_hd , data=HD_all, family = binomial(link = "logit"))
+summary(lm_all_d)
+
+
+round(exp(cbind(Odds_ratio = coef(lm_all_d), confint(lm_all_d,level = 0.95))), 3) %>% 
+  kable(caption = 'Odds ratio of varameter in All hospital (dicotomized)')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+
+
+
+fit_backward = step(lm_all_d, direction = "backward")
+```
+
+
+
+## Final Generalized Regression Model  {.tabset}
+
+Similarity among all these model of having positive HD:-
+Male with age above 40 have higher chance of HD.  
+Most common chest pain- asymptomatic in HD patients.  
+Resting blood pressure , ST_Depression_Exercise , Slope_Peak_Exercise_ST2 =flat 
+Num_Major_Vessels,Thalassemia6 ='fixed defect',Thalassemia7=‘reversible defect’ 
+are significant test. 
+  
+   
+### US1 
+
+Signiﬁcant predictors are -[Male, Chest_Pain_Type4=asymptomatic, Resting_Blood_Pressure, Slope_Peak_Exercise_ST2 = flat,Num_Major_Vessels= 1,2,3 , Thalassemia7=‘reversible defect’] for having p-value <0.05, nd for not having 1.0 inside confidence interval. And there odds ratio is closer to higher than 1.0. There are in favour of having heart disease.
+So being a male, and having asymptomatic- chest pain, having high blood pressure, having flat slope in ST segment excercise test, have colured major blood vessel by flourosopy and having result -reversible defect in Thalassemia test favoures in having heart disease.
+```{r}
+lm_us1_final= glm(diag_hd ~ Sex + Chest_Pain_Type + Resting_Blood_Pressure + Exercise_Induced_Angina + 
+    ST_Depression_Exercise + Slope_Peak_Exercise_ST + Num_Major_Vessels + 
+    Thalassemia, data=HD$US1, family = binomial(link = "logit"))
+summary(lm_us1_final)
+
+round(exp(cbind(Odds_ratio = coef(lm_us1_final), confint(lm_us1_final,level = 0.95))), 3)%>% 
+  
+  kable(caption = 'Odds ratio in US1 hospital (final dicotomized)')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+```
+
+
+
+
+
+
+
+### US2
+```{r}
+
+lm_us2_final= glm(diag_hd ~ Sex + Chest_Pain_Type + ST_Depression_Exercise + Num_Major_Vessels +  Thalassemia + Age_a, data=HD$US2, family = binomial(link = "logit"))
+summary(lm_us2_final)
+
+round(exp(cbind(Odds_ratio = coef(lm_us2_final), confint(lm_us2_final,level = 0.95))), 3)%>% 
+  
+  kable(caption = 'Odds ratio in US2 hospital (final dicotomized)')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+```
+
+
+### EU1  
+
+```{r}
+lm_EU1_final= glm(diag_hd ~ Sex + Chest_Pain_Type + Exercise_Induced_Angina + ST_Depression_Exercise + 
+    Slope_Peak_Exercise_ST + Num_Major_Vessels + Thalassemia
+, data=HD$EU1, family = binomial(link = "logit"))
+summary(lm_EU1_final)
+
+round(exp(cbind(Odds_ratio = coef(lm_EU1_final), confint(lm_EU1_final,level = 0.95))), 3)%>% 
+  
+  kable(caption = 'Odds ratio in EU1 hospital (final dicotomized)')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+```
+
+ 
+
+
+
+### EU2 
+```{r}
+lm_EU2_final= glm(diag_hd ~ Sex + Chest_Pain_Type + Fasting_Blood_Sugar + Exercise_Induced_Angina +  Slope_Peak_Exercise_ST
+, data=HD$EU2, family = binomial(link = "logit"))
+summary(lm_EU2_final)
+
+round(exp(cbind(Odds_ratio = coef(lm_EU2_final), confint(lm_EU2_final,level = 0.95))), 3)%>% 
+  
+  kable(caption = 'Odds ratio in EU2 hospital (final dicotomized)')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+
+
+
+```
+
+
+
+### All, dichotomized
+```{r}
+lm_all_final= glm(diag_hd ~ Sex + Chest_Pain_Type + Exercise_Induced_Angina + ST_Depression_Exercise +  Slope_Peak_Exercise_ST + Num_Major_Vessels + Thalassemia + 
+    Age_a
+, data=HD_all, family = binomial(link = "logit"))
+summary(lm_all_final)
+
+round(exp(cbind(Odds_ratio = coef(lm_all_final), confint(lm_all_final,level = 0.95))), 3)%>% 
+  
+  kable(caption = 'Odds ratio in All hospital combined (final dicotomized)')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+
+
+```
+
+
+
+
+### All, not dichotomized
+```{r}
+lm_all_final_d= glm(Diagnosis ~ Sex + Chest_Pain_Type + Exercise_Induced_Angina + 
+    ST_Depression_Exercise + Slope_Peak_Exercise_ST + Num_Major_Vessels + 
+    Thalassemia + Age_a
+, data=HD_all, family = binomial(link = "logit"))
+summary(lm_all_final_d)
+
+round(exp(cbind(Odds_ratio = coef(lm_all_final_d), confint(lm_all_final_d,level = 0.95))), 3)%>% 
+  
+  kable(caption = 'Odds ratio in US2 hospital (final not dicotomized)')%>%
+  kable_styling(full_width = F, fixed_thead = T)
+```
+
+## Roc Plot   {.tabset}
+
+
+Most of the GLM models does do a good job in predicting HD.  AUC= 0.89 or closer to 1 meaning it a good measure of separation. It is good in predicting HD with/without. Overall dichotomized full model has 93% chance that model will be able to distinguish between positive case and negative case. Roc curve is left facing with more on the left upper side. Its an good curve. Only US2 has lower value comparatively.     
+     
+### US1
+```{r}
+roc(HD$US1$diag_hd, lm_us1_final$fitted.values)
+
+rocplot = function(truth, pred,tit,  ...) {
+  predob = prediction(pred, truth)
+  perf = performance(predob, "tpr", "fpr")
+  plot(perf, ...)
+  area = auc(truth, pred)
+  area = format(round(area, 4), nsmall = 4)
+  text(x=0.8, y=0.1, labels = paste("AUC =", area))
+  title(tit)
+  
+  # the reference x=y line
+  segments(x0=0, y0=0, x1=1, y1=1, col="gray", lty=2)
+}
+
+rocplot(HD$US1$diag_hd, lm_us1_final$fitted.values, 'US1')
+```
+
+
+### US2 
+```{r}
+roc(HD$US2$diag_hd, lm_us2_final$fitted.values)
+
+rocplot(HD$US2$diag_hd, lm_us2_final$fitted.values, 'US2')
+```
+   
+
+### EU1
+```{r}
+roc(HD$EU1$diag_hd, lm_EU1_final$fitted.values)
+
+rocplot(HD$EU1$diag_hd, lm_EU1_final$fitted.values, 'EU1')
+
+
+```
+
+  
+### EU2
+```{r}
+
+roc(HD$EU2$diag_hd, lm_EU2_final$fitted.values)
+
+rocplot(HD$EU2$diag_hd, lm_EU2_final$fitted.values, 'EU2')
+```
+
+
+### All Dichotomize
+```{r}
+
+roc(HD_all$diag_hd, lm_all_final$fitted.values)
+
+rocplot(HD_all$diag_hd, lm_all_final$fitted.values, 'ALL')
+```
+
+
+
+
+### All Not Dichotomize
+
+```{r}
+roc(HD_all$Diagnosis, lm_all_final_d$fitted.values)
+#rocplot(HD_all$Diagnosis, lm_all_final_d$fitted.values, 'All')
+
+#(HD_all$Diagnosis, lm_all_final_d$fitted.values)
+```
+
+
+
+ 
+## Result   {.tabset}
+
+The similarity found among heart disease patients are:-
+• Most of them were male.    
+• Aged between 49 to 60.    
+• Have asymptomatic chest pain.              
+• The fasting glucose test was irrelevant.        
+• Resting ECG test also seemed insignificant.         
+• Most of them had exercise-induced angina present (absent in non-HD patients ).             
+• They got 'Flat’ slope in ST-segment exercises but in a few hospitals, it seemed not significant. (have mixed result of non-HD patient)      
+• Most of the patients with HD get 'reversible defect' in the Thalassemia test.              
+• Have high blood pressure around (mean)134 bp. Non-HD have lower bp comparatively.   
+• Their max heart rate achieved on the Thallium stress test is around 127(mean, SD=24.1). It's usually much lower than non-HD patients. 
+• They have higher results (mean =1.26) in ST depression exercise compared to non-HD patients. It's usually higher than 1 unit.   
+• Colored vessel by fluoroscopy test is significant, if the patient has heart disease then 70% of the time it will be found through this. Only 30%  of heart disease did not have colored vessels in the test.         
+• All of the ROC curve and model were significant. 
+•  Thal, Thalanch, ST depression ecercise, ST slope peak exercise, Resting blood pressure, color Num_Major_Vessels,Thalassemia test are significant. 
+
+Since these are significant there cost can be reduced to reasonable amount. 
+
+
+```{r}
+Test<- c("cp","trestbps","fbs","restecg","thalach","exang", "oldpeak","slope","ca","thal")
+cost<-c(0,0,5.20, 15.50, 102.90, 87.30, 87.30, 87.30, 100.90, 102.90)
+
+
+new<- c(0, 0, 5.20, 15.50, 70, 87.3	, 60, 60, 80, 80)
+costs<- data.frame(Test,cost, new)
+costs
+```
+
+
+
+
+## Conclusion    {.tabset}
+
+Being male and in your late 40 to 60 does increases chance in having cardiovascular disease.
+Most of the HD patients had a asymptomatic chest pain.
+Patient with HD have lower max heart rate in Thallium stress test conparatively to non-HD patients.
+HD patients have higher blood pressure.
+Except in a few hospitals, the majority of them have shown fasting blood sugar, resting ECG are an insignificant test. 
+Exercise_Induced_Angina gives mixed result hence this test can be avoided as well.     
+Thalanch, Resting blood pressure , ST Depression Exercise , Slope Peak Exercise ST2 =flat 
+Num_Major_Vessels,Thalassemia6 ='fixed defect',Thalassemia7=‘reversible defect’ 
+are significant test. Since these are significant there cost can be reduced to reasonable amount. 
+
+
+## Bibliography {.tabset}
+
+1. URL- Notast.netlif,  https://notast.netlify.com/post/explaining-predictions-interpretable-models-logistic-regression/
+
+2. URL- RPubs,  https://rpubs.com/mbbrigitte/heartdisease   
+
+3. Rai, Sadhana. (2015). Cardiovascular Disease Dataset Exploration Using Hive and R. International Journal of Advanced Research in Computer Science and Software Engineering. Volume 5. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
