@@ -1,5 +1,5 @@
 ---
-title: "Aaphsaarah Rahman, Ms"
+title: "Aaphsaarah Rahman, M.S."
 ---
 
 
@@ -11,12 +11,11 @@ include_graphics("me.jpg")
 ```
 
 
-Hey!
-
-I’m Aaphsaarah Rahman. A little background about myself - I’m a graduate student at [Cornell  University, Weill Cornell Medicine](https://weill.cornell.edu/), acquiring my Masters in Biostatistics and Data Science. I am a Data Enthusiast. My passion for Data Science world have brought me here and I'm enjoying the ride tremendously so far. I did my undergrad in Electrical and Electrical Engineering at [North South University](http://www.northsouth.edu/), Bangladesh. I have published and presented a paper titled “A Novel Braille Pad with Dual Text-to-Braille and Braille-to-Text Capabilities with an integrated LCD Display” in the 2017 International Conference on Intelligent Computing, Instrumentation and Control Technologies (ICICICT), Kerala, India, held on 6th -7th July 2017. During this capstone project, I made a Braille Pad through which I found my love for programming. And after doing my internship at [GrameenPhone Ltd](https://www.grameenphone.com/about), (Telenor Group) under Data Analyst and Research team, I was adamant to pursue my career in Data Science.   
+Hey! I’m Aaphsaarah Rahman.   
+A little background about myself - I’m a graduate student at [Cornell  University, Weill Cornell Medicine](https://weill.cornell.edu/), acquiring my Masters in Biostatistics and Data Science. I am a Data Enthusiast and my passion for Data Science has brought me here and I'm enjoying the ride tremendously. I did my undergrad in Electrical and Electronic Engineering at [North South University](http://www.northsouth.edu/), Bangladesh. I found my love for programming during my capstone project where I created a Brille Pad which had Text-to-Braille and Braille-to-Text capabilities with an integrated LCD Display. I have published and presented a paper based on this technology, titled “A Novel Braille Pad with Dual Text-to-Braille and Braille-to-Text Capabilities with an integrated LCD Display” in the 2017 International Conference on Intelligent Computing, Instrumentation and Control Technologies (ICICICT), Kerala, India, held on 6th -7th July 2017. I became adamant about pursuing my career in Data Science after doing my internship at [GrameenPhone Ltd](https://www.grameenphone.com/about), (Telenor Group) as a Data Analyst intern for Data Analyst and Research team under Business Intelligence department.   
    
 
-Coding is fun, easy and adventurous once you get the gist of it. I love sharing open-source codes and providing advices on it. This blogs and articles are about sharing some interesting insights, which I explored while doing few projects. Hope you enjoy it!
+Coding is fun, easy and adventurous once you get the gist of it. I love sharing open-source codes and providing helpful advice on it. These blogs and articles I shared provides interesting insights on various topics, which I discovered while doing few personal projects. Hope you enjoy it!
 
 If you like to know more about me, then [here](Aaphsaarah Rahman resume'20.pdf) is my resume. 
 
@@ -66,4 +65,6 @@ include_url('https://ieeexplore.ieee.org/abstract/document/8342559', height = '5
 •Green Leaf Youth Association, a daylong fundraising event for children, 2013                  
 •Jaago, raised fund for children, 2013                
 •Human Aid Foundation, raised fund for tree plantation and blind children,2013 
+
+
 
