@@ -11,7 +11,8 @@ include_graphics("me.jpg")
 ```
 
 
-Hey! I’m Aaphsaarah Rahman.   
+Hey! I’m Aaphsaarah Rahman.  
+     
 A little background about myself - I’m a graduate student at [Cornell  University, Weill Cornell Medicine](https://weill.cornell.edu/), acquiring my Masters in Biostatistics and Data Science. I am a Data Enthusiast and my passion for Data Science has brought me here and I'm enjoying the ride tremendously. I did my undergrad in Electrical and Electronic Engineering at [North South University](http://www.northsouth.edu/), Bangladesh. I found my love for programming during my capstone project where I created a Brille Pad which had Text-to-Braille and Braille-to-Text capabilities with an integrated LCD Display. I have published and presented a paper based on this technology, titled “A Novel Braille Pad with Dual Text-to-Braille and Braille-to-Text Capabilities with an integrated LCD Display” in the 2017 International Conference on Intelligent Computing, Instrumentation and Control Technologies (ICICICT), Kerala, India, held on 6th -7th July 2017. I became adamant about pursuing my career in Data Science after doing my internship at [GrameenPhone Ltd](https://www.grameenphone.com/about), (Telenor Group) as a Data Analyst intern for Data Analyst and Research team under Business Intelligence department.   
    
 
@@ -40,7 +41,8 @@ Selected courses: Data Communications and Computer Networks, Mobile and Wireless
 
 ### **Publication**   
    
-Presented a paper titled “A Novel Braille Pad with Dual Text-to-Braille and Braille-to-Text capabilities with an integrated LCD Display” in the 2017 International Conference on Intelligent Computing, Instrumentation and Control Technologies (ICICICT), Kerala, India, held on 6th -7th July 2017. And at this conference, we got the Best Paper Award. The paper was about Braille Pad which we made for the Capstone Project in my final year at North South University and it was a success.                          
+Presented a paper titled “A Novel Braille Pad with Dual Text-to-Braille and Braille-to-Text capabilities with an integrated LCD Display” in the 2017 International Conference on Intelligent Computing, Instrumentation and Control Technologies (ICICICT), Kerala, India, held on 6th -7th July 2017. And at this conference, we got the Best Paper Award. The paper was about Braille Pad which we made for the Capstone Project in my final year at North South University and it was a success.    
+    
 The paper is published in IEEE Xplore. -                
 **S. Sultana, A. Rahman, F. H. Chowdhury, and H. U. Zaman, "A novel Braille pad with dual text-to-Braille and Braille-to-text capabilities with an integrated LCD display," 2017 International Conference on Intelligent Computing, Instrumentation and Control Technologies (ICICICT), Kannur, 2017, pp. 195-200.**                    
 Link can be found [here](https://ieeexplore.ieee.org/abstract/document/8342559) .
