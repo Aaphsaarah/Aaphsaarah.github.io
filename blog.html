@@ -234,6 +234,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -259,8 +260,6 @@ $(document).ready(function () {
 <div class="container-fluid main-container">
 
 
-
-
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -276,8 +275,26 @@ $(document).ready(function () {
         
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="blog.html">Blog</a>
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Blog
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="blog.html">Waffle Plot!</a>
+    </li>
+    <li>
+      <a href="Birthweight.html">Baby birthweight matters!</a>
+    </li>
+    <li>
+      <a href="heart_disease.html">Analysis and Prediction of Heart Disease</a>
+    </li>
+    <li>
+      <a href="IMDB.html">IMDB and TMDB Analysis</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="mailto:&lt;apsarah.rahman@gmail.com&gt;">
@@ -294,6 +311,18 @@ $(document).ready(function () {
 <li>
   <a href="https://twitter.com/aaphsaarah">
     <span class="fa fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.facebook.com/apsarah.rahman">
+    <span class="fa fa-facebook fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/aaphsaarah-rahman/">
+    <span class="fa fa-linkedin fa-lg"></span>
      
   </a>
 </li>
