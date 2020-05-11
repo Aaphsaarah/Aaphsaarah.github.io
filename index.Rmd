@@ -44,15 +44,15 @@ Selected courses: Data Communications and Computer Networks, Mobile and Wireless
 Presented a paper titled “A Novel Braille Pad with Dual Text-to-Braille and Braille-to-Text capabilities with an integrated LCD Display” in the 2017 International Conference on Intelligent Computing, Instrumentation and Control Technologies (ICICICT), Kerala, India, held on 6th -7th July 2017. And at this conference, we got the Best Paper Award. The paper was about Braille Pad which we made for the Capstone Project in my final year at North South University and it was a success.    
     
 The paper is published in IEEE Xplore. -                
-**S. Sultana, A. Rahman, F. H. Chowdhury, and H. U. Zaman, "A novel Braille pad with dual text-to-Braille and Braille-to-text capabilities with an integrated LCD display," 2017 International Conference on Intelligent Computing, Instrumentation and Control Technologies (ICICICT), Kannur, 2017, pp. 195-200.**                    
-Link can be found [here](https://ieeexplore.ieee.org/abstract/document/8342559) .
+[**S. Sultana, A. Rahman, F. H. Chowdhury, and H. U. Zaman, "A novel Braille pad with dual text-to-Braille and Braille-to-text capabilities with an integrated LCD display," 2017 International Conference on Intelligent Computing, Instrumentation and Control Technologies (ICICICT), Kannur, 2017, pp. 195-200.**](https://ieeexplore.ieee.org/abstract/document/8342559) .
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 include_url('https://ieeexplore.ieee.org/abstract/document/8342559', height = '500px')
 ```
 
 
-### **AWARDS/ACHIEVEMENTS**     
+### **AWARDS/ACHIEVEMENTS**  
+• Finalist in [Healthcare AI Hackathon, 2020](https://health2020.splashthat.com/). Made an app **MyHealth** which seamlessly connects patients' medical records with their caregiver with consent (of course!)    
 • Statement of Accomplishment, on completing online courses on “ Intro to Python for data science”,” Intermediate Python for Data Science Course”, “Python Data Science Toolbox (Part 1) Course” from Data Camp website. Nov 2017                
 • Completed Top-up IT Training, conducted by Ernst & Young LLP, India under Leveraging ICT for Growth, Employment and Governance (LICT) Project of Bangladesh Computer Council (BCC), ICT Division, People's Republic of Bangladesh on Web Development under NASSCOM IT-ITES Sector Skill Council (SSC) Certification, in Jan 2017            
 • Received Best paper award on conference paper- “A Novel Braille Pad with Dual Text-to-Braille and Braille-to-Text capabilities with an integrated LCD Display” paper published in IEEE Xplore, July 2017              
