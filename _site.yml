@@ -6,7 +6,7 @@ navbar:
     - text: "Blog"
       menu:
         - text: "Waffle Plot!" 
-          href:  blog.html
+          href:  Waffle.html
         - text: "Baby birthweight matters!" 
           href:  birthweight.html
         - text: "Analysis and Prediction of Heart Disease" 

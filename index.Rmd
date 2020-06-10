@@ -18,23 +18,21 @@ A little background about myself - I’m a graduate student at [Cornell  Univers
 
 Coding is fun, easy and adventurous once you get the gist of it. I love sharing open-source codes and providing helpful advice on it. These blogs and articles I shared provides interesting insights on various topics, which I discovered while doing a few personal projects. Hope you enjoy it!
 
-If you like to know more about me, then [here](Aaphsaarah Rahman resume'20.pdf) is my resume. 
+If you like to know more about me, then [here](Aaphsaarah_Rahman__resume.pdf) is my resume. 
 
 ### **Education**     
 
                                       
-**MS in Biostatistics and Data Science**              
-*Sept 2019 – Aug 2020*                       
-Weill Cornell Medicine of Cornell University,                       
-NY, USA                                                                           
-Specializing in R, Python, Biostatistics, Data Management, Pharmaceutical studies.         
-   
-**B.Sc in Electrical and Electronic Engineering**                         
-*Jan 2013 – Apr 2017*              
-North South University,       
-Dhaka, Bangladesh      
-Major: EEE (Electrical and Electronic Engineering)     
-Selected courses: Data Communications and Computer Networks, Mobile and Wireless Communication System, Communication Electronics, Introduction to VLSI Design, Verilog HDL: Modeling, Simulation, and Synthesis.
+**MS in Biostatistics and Data Science**                                           
+**Cornell University | Weill Cornell Medicine** | NY, USA   
+**Sept 2019 – Aug 2020**    
+Specializing in R, Python, Biostatistics, Data Management, Pharmaceutical studies, and Genetics and Genomics studies.         
+     
+         
+**B.Sc in Electrical and Electronic Engineering**                                
+**North South University** | Dhaka, Bangladesh   
+**Jan 2013 – Apr 2017**    
+Specialized in Data Communications and Computer Networks, Mobile and Wireless Communication System, Communication Electronics, VLSI Design, Verilog HDL: Modeling, Simulation, and Synthesis.   
     
  
 
@@ -55,18 +53,19 @@ include_url('https://ieeexplore.ieee.org/abstract/document/8342559', height = '5
 • Finalist in [Healthcare AI Hackathon, 2020](https://health2020.splashthat.com/). Made an app **MyHealth** which seamlessly connects patients' medical records with their caregiver with consent (of course!)    
 • Statement of Accomplishment, on completing online courses on “ Intro to Python for data science”,” Intermediate Python for Data Science Course”, “Python Data Science Toolbox (Part 1) Course” from Data Camp website. Nov 2017                
 • Completed Top-up IT Training, conducted by Ernst & Young LLP, India under Leveraging ICT for Growth, Employment and Governance (LICT) Project of Bangladesh Computer Council (BCC), ICT Division, People's Republic of Bangladesh on Web Development under NASSCOM IT-ITES Sector Skill Council (SSC) Certification, in Jan 2017            
-• Received Best paper award on conference paper- “A Novel Braille Pad with Dual Text-to-Braille and Braille-to-Text capabilities with an integrated LCD Display” paper published in IEEE Xplore, July 2017              
+• Received Best paper award on conference paper- “A Novel Braille Pad with Dual Text-to-Braille and Braille-to-Text capabilities with an integrated LCD Display” paper published in IEEE Xplore, July 2017
+
 • Received Art and Practice of Leadership certificate (APL-8 graduate) from Bangladesh Youth Leadership Centre (BYLC), 2015              
 • Received Daily Star Award in A’ levels (2012)             
 • Attained Bronze and Silver Standard of the International Award for Young People, Duke of Edinburgh, in 2011, 2013 respectively          
                 
                                 
 ### **EXTRACURRICULAR ACTIVITIES/VOLUNTEERING WORKS**              
-•Member of NSU tuition committee, 2017 Finalist of YLP, Youth Leadership Prize, BYLC, 2016                
-•INSB Member-(IEEE North South University Student Branch), 2016 Home tutored for 3-years, 2013-2016             
-•Green Leaf Youth Association, a daylong fundraising event for children, 2013                  
-•Jaago, raised fund for children, 2013                
-•Human Aid Foundation, raised fund for tree plantation and blind children,2013 
+  • Member of NSU tuition committee, 2017 Finalist of YLP, Youth Leadership Prize, BYLC, 2016                
+  • INSB Member-(IEEE North South University Student Branch), 2016 Home tutored for 3-years, 2013-2016
+  • Green Leaf Youth Association, a daylong fundraising event for children, 2013                  
+  • Jaago, raised fund for children, 2013                
+  • Human Aid Foundation, raised fund for tree plantation and blind children, 2013 
 
 
 

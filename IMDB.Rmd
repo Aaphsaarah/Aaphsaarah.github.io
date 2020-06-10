@@ -1,0 +1,21 @@
+---
+title: "Analysis on Movie Databases - IMDB and TMDB"
+---
+#### *Author: Aaphsaarah Rahman*
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, echo=FALSE, out.width='90%', out.height='100%'}  
+library("htmltools")
+
+htmltools::includeHTML("IMDB2.html")
+ 
+``` 
+  
+  
+  
+  
+                    
+                         

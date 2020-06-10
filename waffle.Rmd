@@ -1,0 +1,19 @@
+---
+Title: "Mirror mirror on the wall who has the awesome plot in the world - Its Waffle Plot!"
+---
+
+#### *Author: Aaphsaarah Rahman*
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, echo=FALSE, out.width='90%', out.height='100%'}  
+library("htmltools")
+
+htmltools::includeHTML("blog.html")
+ 
+``` 
+  
+  
