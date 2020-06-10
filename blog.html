@@ -12,7 +12,7 @@
 
 
 
-<title>Blog</title>
+<title>Mirror mirror on the wall who has the awesome plot in the world - Its Waffle Plot!</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -234,6 +234,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -259,8 +260,6 @@ $(document).ready(function () {
 <div class="container-fluid main-container">
 
 
-
-
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -276,8 +275,26 @@ $(document).ready(function () {
         
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="blog.html">Blog</a>
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Blog
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="blog.html">Waffle Plot!</a>
+    </li>
+    <li>
+      <a href="birthweight.html">Baby birthweight matters!</a>
+    </li>
+    <li>
+      <a href="heart_disease.html">Analysis and Prediction of Heart Disease</a>
+    </li>
+    <li>
+      <a href="IMDB.html">IMDB and TMDB Analysis</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="mailto:&lt;apsarah.rahman@gmail.com&gt;">
@@ -298,11 +315,19 @@ $(document).ready(function () {
   </a>
 </li>
 <li>
+  <a href="https://www.facebook.com/apsarah.rahman">
+    <span class="fa fa-facebook fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://www.linkedin.com/in/aaphsaarah-rahman/">
     <span class="fa fa-linkedin fa-lg"></span>
      
   </a>
 </li>
+ 
+        
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -312,16 +337,18 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Blog</h1>
-<h3 class="subtitle">Mirror mirror on the wall who has the awesome plot in the world - Its Waffle Plot!</h3>
+<h1 class="title toc-ignore">Mirror mirror on the wall who has the awesome plot in the world - Its Waffle Plot!</h1>
 
 </div>
 
-
+<div id="author-aaphsaarah-rahman" class="section level4">
+<h4><em>Author: Aaphsaarah Rahman</em></h4>
+</div>
+  
 <p>Is it really important to make the plots look good, readable for clients?</p>
 <p>Yes! It’s very important.</p>
-<p>We often see a histogram or bar chart in the data visualisation section to interpret data, which is pretty monotonous. So I got around these amazing Waffle plots. Waffle plot looks like waffle hence the name.</p>
-<p><img src="waffle.jpg" width="30%" style="display: block; margin: auto;" /></p>
+<p>We often see a histogram or bar chart in the data visualisation section to interpret data, which is pretty monotonous. So I got around these amazing Waffle plot. Waffle plot looks like waffle hence the name.</p>
+  <p><img src="waffle.jpg" width="30%" style="display: block; margin: auto;" /></p>
 <p>To get started we need to install these packages.<br />
 Waffle and Hrbrthemes package includes the icon as a square box, which can be customized according to our means. Hrbrthemes can be installed from Github. Extrafont package makes it easier to use fonts other than the basic PostScript fonts that R uses. Fonts that are imported into extrafont can be used with PDF or PostScript output files. And few basic library as “ggplot2”, “dplyr”, “tidyverse” needs to be loaded as well.</p>
 <pre class="r"><code> install.packages(c(&quot;waffle&quot;, &quot;extrafont&quot;, &quot;Hrbrthemes&quot;))</code></pre>
@@ -332,10 +359,12 @@ library(extrafont)
 library(waffle)
 library(hrbrthemes)
 library(dplyr)</code></pre>
-<p><strong>Simplest waffle Plot</strong></p>
+<div id="simpliest-waffle-plot" class="section level1">
+<h1>Simplest waffle Plot</h1>
 <p>This is a simplest usage of a waffle plot. Pluging five values(20,40,10,5,25), with five rows and giving a title “Basic waffle chart”.</p>
 <pre class="r"><code>waffle(c(20,40,10,5,25), rows = 5, title = &quot;Basic waffle chart&quot;, xlab = &quot;1 box equals 1 unit&quot;)</code></pre>
-<p><img src="blog_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="blog_files/figure-html/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;" /></p>
+</div>
 <div id="data-frame" class="section level1">
 <h1>Data frame</h1>
 <p>Lets make a data frame as an example to work with. There are four fruits with assigned values and colour.</p>
@@ -361,12 +390,12 @@ fruit_df</code></pre>
 </div>
 <div id="simple-waffle-plot" class="section level1">
 <h1>Simple waffle plot</h1>
-<p>This is plain waffle. It uses the syntax geom_waffle(). It works similar to waffle(). Flip parameter makes the plot in horizontal position otherwise it would be vertical, n_rows sets the no. of row for the base of plot and size is its size of box.</p>
+<p>This is plain waffle. It uses the syntax geom_waffle(). It worls similar to waffle(). Flip parameter makes the plot in horizontal position otherwise it would be vertical, n_rows sets the no. of row for the base of plot and size is its size of box.</p>
 <pre class="r"><code>fruit_data +
   geom_waffle(
     n_rows = 15, size = 0.33, colour = &quot;white&quot;, flip = TRUE
   )</code></pre>
-<p><img src="blog_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="blog_files/figure-html/unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
 <div id="proportional-waffle-plot" class="section level1">
 <h1>Proportional waffle plot</h1>
@@ -376,7 +405,7 @@ fruit_df</code></pre>
     n_rows = 10, size = 0.33, colour = &quot;white&quot;, flip = TRUE,
     make_proportional = TRUE
   )</code></pre>
-<p><img src="blog_files/figure-html/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="blog_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
 <div id="adding-border-colour" class="section level1">
 <h1>Adding border colour</h1>
@@ -385,16 +414,16 @@ fruit_df</code></pre>
   geom_waffle(
     n_rows = 10, size = 3, colour = &quot;white&quot;, make_proportional = TRUE
   )</code></pre>
-<p><img src="blog_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="blog_files/figure-html/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
 <div id="make-waffle-box-into-circles" class="section level1">
 <h1>Make waffle box into circles</h1>
-<p>Let us mix things up we can round out the corners by specifying a grid::unit() value to the radius parameter. It brings variety to the graph. This isn’t generally recommended as the goal is to enable quick mental perception for parts to the whole and the rounded corners can delay and/or skew said interpretation</p>
+<p>Let us mix things up we can round out the corners by specifying a grid::unit() value to the radius parameter. It brings variety to the graph. This isn’t generally recommended as the goal is to enable quick mental perception for parts to the whole and the rounded corners can delay and/or skew said interpretation.</p>
 <pre class="r"><code>fruit_data +
   geom_waffle(
     n_rows = 15, size = 0.5, colour = &quot;white&quot;, flip = TRUE, radius = unit(9, &quot;pt&quot;)
   )</code></pre>
-<p><img src="blog_files/figure-html/unnamed-chunk-10-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="blog_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
 <div id="highlighting-effect" class="section level1">
 <h1>Highlighting effect</h1>
@@ -408,8 +437,8 @@ fruit_df</code></pre>
   scale_colour_manual(
     values = c(&quot;black&quot;, &quot;white&quot;, &quot;black&quot;, &quot;white&quot;)
   )</code></pre>
-<p><img src="blog_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>There is another Waffle plot which includes icons inside, Github page argues that the argument use_glyph can be used to replace the tiles by pictures from the extrafont package, however, I could not get the code to work.</p>
+<p><img src="blog_files/figure-html/unnamed-chunk-10-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>There is another Waffle plot which includes icons inside, Github page argues that the argument use_glyph can be used to replace the tiles by pictures from the extrafont package. However, I could not get the code to work.</p>
 <p>Waffle plot is easy to understand and not monotonous like histogram. Its easy to grab the information from the graph. Its even readable for people who is not from a technical background.</p>
 </div>
 
