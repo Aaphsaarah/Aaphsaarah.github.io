@@ -1,11 +1,9 @@
 ---
-title: "Blog"
-subtitle: Mirror mirror on the wall who has the awesome plot in the world - Its Waffle Plot!
+title: **Mirror mirror on the wall who has the awesome plot in the world - Its Waffle Plot!**
 
 ---
-# **Mirror mirror on the wall who has the awesome plot in the world - Its Waffle Plot!**
 
-*Aaphsaarah Rahman*
+### *Aaphsaarah Rahman*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
 	error = FALSE,
