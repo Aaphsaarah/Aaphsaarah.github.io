@@ -1,12 +1,12 @@
 name: "Aaphsaarah Rahman!"
 output_dir: "."
 navbar:
-  title: "About Me"
+  title: "Author"
   right:
     - text: "Blog"
       menu:
         - text: "Waffle Plot!" 
-          href:  Waffle.html
+          href:  blog.html
         - text: "Baby birthweight matters!" 
           href:  birthweight.html
         - text: "Analysis and Prediction of Heart Disease" 

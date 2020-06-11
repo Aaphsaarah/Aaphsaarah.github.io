@@ -1,7 +1,9 @@
 ---
 title: "Analysis on Movie Databases - IMDB and TMDB"
+output: html_document
 ---
-#### *Author: Aaphsaarah Rahman*
+#### *Author: Aaphsaarah Rahman*  
+  
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
