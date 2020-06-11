@@ -3,7 +3,7 @@ title: **Mirror mirror on the wall who has the awesome plot in the world - Its W
 
 ---
 
-### *Aaphsaarah Rahman*
+#### *Author: Aaphsaarah Rahman*
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
 	error = FALSE,
